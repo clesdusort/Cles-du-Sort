@@ -418,9 +418,94 @@
   }
 
   ::selection{background:var(--gold); color:var(--ink);}
+
+  /* ---------- Gate overlay (site en construction) ---------- */
+  body.gate-active{overflow:hidden;}
+  .gate{
+    position:fixed; inset:0; z-index:9999;
+    background:linear-gradient(170deg, var(--ink) 0%, #1e1e50 100%);
+    display:flex; align-items:center; justify-content:center;
+    padding:24px; overflow-y:auto;
+  }
+  .gate-card{
+    max-width:560px; width:100%; text-align:center; position:relative;
+    padding:20px 0;
+  }
+  .gate-seal{width:64px; height:64px; margin:0 auto 22px;}
+  .gate-badge{
+    display:inline-flex; align-items:center; gap:8px;
+    background:rgba(239,191,4,.14); border:1px solid var(--gold);
+    color:var(--gold); font-family:var(--sans); font-size:12.5px; font-weight:600;
+    letter-spacing:.14em; text-transform:uppercase; padding:8px 18px; border-radius:999px;
+    margin-bottom:24px;
+  }
+  .gate h1{color:var(--white); font-size:clamp(32px,5vw,46px); margin-bottom:14px;}
+  .gate p.gate-lede{color:#d8d7ec; font-size:16.5px; max-width:440px; margin:0 auto 32px;}
+  .gate-form{
+    background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.14);
+    border-radius:var(--r-md); padding:28px; text-align:left;
+  }
+  .gate-form label{
+    display:block; font-family:var(--sans); font-size:12.5px; font-weight:600;
+    letter-spacing:.08em; text-transform:uppercase; color:#c9c8e2; margin-bottom:8px;
+  }
+  .gate-field{margin-bottom:18px;}
+  .gate-form select, .gate-form input[type="email"]{
+    width:100%; padding:13px 16px; border-radius:10px; border:1.5px solid rgba(255,255,255,.2);
+    background:rgba(255,255,255,.95); color:var(--black); font-family:var(--sans); font-size:15px;
+  }
+  .gate-form select:focus, .gate-form input:focus{outline:2px solid var(--gold);}
+  .gate-count{
+    font-size:13px; color:#a9a8cc; margin-top:16px; text-align:center;
+  }
+  .gate-count strong{color:var(--gold);}
+  @media (max-width:600px){ .gate-card{padding:10px 0;} }
 </style>
 </head>
 <body>
+
+<div class="gate" id="siteGate">
+  <div class="gate-card">
+    <svg class="gate-seal" viewBox="0 0 60 60" fill="none">
+      <circle cx="30" cy="30" r="28" fill="#EFBF04"/>
+      <circle cx="30" cy="30" r="28" stroke="#b98f02" stroke-width="1"/>
+      <text x="30" y="38" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="20" font-weight="700" fill="#272757">CS</text>
+    </svg>
+    <div class="gate-badge">✨ Le site est en cours de fabrication</div>
+    <h1>Clés du Sort arrive bientôt</h1>
+    <p class="gate-lede">Le Courrier de l'Oracle se prépare, à la main, en coulisses. En attendant l'ouverture, deviens l'une des <strong>30 premières pionnières</strong> du courrier et sois prévenue en priorité.</p>
+
+    <form class="gate-form" id="gateForm">
+      <div class="gate-field">
+        <label for="gateGuidance">La Guidance qui t'intéresse</label>
+        <select id="gateGuidance" required>
+          <option value="" disabled selected>Choisis une guidance</option>
+          <option value="Guidance Mensuelle">Guidance Mensuelle</option>
+          <option value="Guidance Personnalisée">Guidance Personnalisée</option>
+          <option value="Guidance Anniversaire">Guidance Anniversaire</option>
+        </select>
+      </div>
+      <div class="gate-field" style="margin-bottom:22px;">
+        <label for="gateEmail">Ton email</label>
+        <input type="email" id="gateEmail" placeholder="toi@exemple.com" required>
+      </div>
+      <button type="submit" class="btn btn-gold btn-block">Rejoindre les pionnières</button>
+    </form>
+    <p class="gate-count">Places limitées — <strong>30 pionnières maximum</strong> pour ce premier lancement.</p>
+  </div>
+</div>
+
+<script>
+  document.body.classList.add('gate-active');
+  document.getElementById('gateForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var guidance = document.getElementById('gateGuidance').value;
+    var email = document.getElementById('gateEmail').value;
+    var subject = encodeURIComponent('Je souhaite me renseigner sur la ' + guidance);
+    var body = encodeURIComponent('Merci de m\'ajouter à la liste.\n\nMon email : ' + email);
+    window.location.href = 'mailto:cles.dusort@gmail.com?subject=' + subject + '&body=' + body;
+  });
+</script>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
@@ -591,7 +676,7 @@
             <p class="eyebrow" style="margin-bottom:4px;">Guidance Personnalisée</p>
             <div class="price">39,99&nbsp;€</div>
             <p>Une question précise, un éclairage détaillé. Le tirage est construit spécifiquement pour répondre à ce qui t'occupe l'esprit en ce moment.</p>
-            <a href="PASTE_STRIPE_LINK_PERSONNALISEE" class="btn btn-outline btn-block">Réserver ma consultation</a>
+            <a href="PASTE_STRIPE_LINK_PERSONNALISEE" class="btn btn-outline btn-block">Réserver ma Guidance Personnalisée</a>
           </div>
         </div>
       </div>
@@ -677,7 +762,7 @@
     <div class="wrap">
       <p class="eyebrow on-ink"><span class="seal-dot"></span>Clés du Sort</p>
       <h2>Prête à recevoir<br>ta première lettre&nbsp;?</h2>
-      <p>Rejoins la Guidance Mensuelle, réserve une consultation en visio, ou explore les autres correspondances — dans tous les cas, ça commence par un formulaire de deux minutes.</p>
+      <p>Rejoins la Guidance Mensuelle, ou explore les autres correspondances — dans tous les cas, ça commence par un formulaire de deux minutes.</p>
       <div class="cta-row">
         <a href="#correspondances" class="btn btn-gold">Rejoindre le club</a>
         <a href="https://forms.gle/AMYZCN3haLunuXmx6" class="btn btn-ghost-ink">Remplir le formulaire</a>
@@ -710,7 +795,6 @@
         <ul>
           <li><a href="#concept">Le concept</a></li>
           <li><a href="#correspondances">Correspondances</a></li>
-          <li><a href="#consultations">Consultations</a></li>
           <li><a href="#processus">Le processus</a></li>
         </ul>
       </div>
@@ -719,8 +803,8 @@
         <ul>
           <li><a href="mailto:cles.dusort@gmail.com">cles.dusort@gmail.com</a></li>
           <li><a href="https://forms.gle/AMYZCN3haLunuXmx6">Formulaire d'inscription</a></li>
-          <li><a href="#">Mentions légales</a></li>
-          <li><a href="#">CGV</a></li>
+          <li><a href="mentions-legales.html">Mentions légales</a></li>
+          <li><a href="mentions-legales.html#cgv">CGV</a></li>
         </ul>
       </div>
     </div>
