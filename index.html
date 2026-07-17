@@ -57,13 +57,14 @@
 
   /* ---------- Nav ---------- */
   header.site-nav{
-    position:sticky; top:0; z-index:60; background:rgba(255,255,255,.94);
-    backdrop-filter:blur(8px); border-bottom:1px solid var(--line);
+    position:sticky; top:0; z-index:60; background:var(--white);
+    border-bottom:1px solid var(--line);
   }
   .nav-inner{
     max-width:var(--maxw); margin:0 auto; padding:16px 32px;
     display:flex; align-items:center; justify-content:space-between; gap:20px;
   }
+  .nav-inner > a:first-child{flex-shrink:0;}
   .logo-img{height:44px; width:auto;}
   nav.links{display:flex; align-items:center; gap:40px;}
   nav.links a{
@@ -76,10 +77,12 @@
     font-size:12px; font-weight:800; letter-spacing:.04em; text-transform:uppercase;
     color:var(--gold-deep); text-align:center; line-height:1.5; text-decoration:none;
     border-top:1.5px solid var(--line); border-bottom:1.5px solid var(--line); padding:8px 4px;
+    margin-left:auto;
   }
-  .burger{display:none; background:none; border:none; cursor:pointer; padding:6px;}
+  .burger{display:none; background:none; border:none; cursor:pointer; padding:6px; flex-shrink:0;}
   .burger span{display:block; width:24px; height:2px; background:var(--ink); margin:5px 0; border-radius:2px;}
   @media (max-width:900px){
+    .nav-inner{padding:14px 20px;}
     nav.links{
       position:fixed; inset:70px 0 0 0; background:var(--white);
       flex-direction:column; align-items:flex-start; padding:30px 32px; gap:22px;
@@ -87,7 +90,7 @@
     }
     nav.links.open{transform:translateY(0);}
     nav.links a{font-size:17px;}
-    .nav-cta{display:none;}
+    nav.links .nav-cta{margin-left:0; margin-top:10px; width:100%; text-align:left; padding-left:0; padding-right:0;}
     .burger{display:block;}
   }
 
@@ -98,6 +101,11 @@
   .hero p.lede{font-size:17px; max-width:480px; color:#222;}
   .hero-photo{display:flex; justify-content:center;}
   .hero-photo img{max-width:340px; border-radius:6px;}
+  .hero-photo-mobile{display:none;}
+  @media (max-width:900px){
+    .hero-photo-desktop{display:none;}
+    .hero-photo-mobile{display:flex; margin:20px 0;}
+  }
   @media (max-width:900px){
     .hero .wrap{grid-template-columns:1fr; gap:36px; text-align:left;}
   }
@@ -125,7 +133,7 @@
   .concept-panel .btn{margin-top:8px;}
   @media (max-width:900px){
     .concept-grid{grid-template-columns:1fr;}
-    .concept-photo{height:360px;}
+    .concept-photo{display:none;}
   }
 
   /* ---------- Process carousel ---------- */
@@ -278,7 +286,8 @@
     .cta-banner .logo-img{height:50px !important;}
     .footer-grid{gap:26px;}
     .hero-photo img{max-width:220px;}
-    .concept-photo{height:260px;}
+    a.btn:not(.btn-block){display:flex; width:fit-content; margin-left:auto !important; margin-right:auto !important;}
+    .product-body .btn{align-self:center;}
   }
   @media (max-width:400px){
     .hero h1{font-size:24px;}
@@ -365,8 +374,8 @@
     <nav class="links" id="navLinks">
       <a href="#concept">Le concept</a>
       <a href="#correspondances">Les correspondances</a>
+      <a href="https://forms.gle/AMYZCN3haLunuXmx6" target="_blank" rel="noopener" class="nav-cta">Rejoindre le club</a>
     </nav>
-    <a href="https://forms.gle/AMYZCN3haLunuXmx6" target="_blank" rel="noopener" class="nav-cta">Rejoindre<br>le club</a>
     <button class="burger" id="burgerBtn" aria-label="Ouvrir le menu"><span></span><span></span><span></span></button>
   </div>
 </header>
@@ -378,10 +387,13 @@
     <div class="wrap">
       <div>
         <h1>Clés du Sort te propose de recevoir un peu de magie dans ta boite aux lettres</h1>
+        <div class="hero-photo hero-photo-mobile">
+          <img src="assets/photo-plateau.jpg" alt="Enveloppe scellée à la cire, posée sur un plateau doré">
+        </div>
         <p class="lede">Ce n'est pas un mail. Pas une notification. Pas un post Instagram de plus. C'est une enveloppe faite pour toi, qui se déplie pour révéler un message, encensée et scellée à la cire pour garder le tout secret, avant de prendre la route jusqu'à toi.</p>
         <a href="#correspondances" class="btn btn-navy">Découvrir les correspondances</a>
       </div>
-      <div class="hero-photo">
+      <div class="hero-photo hero-photo-desktop">
         <img src="assets/photo-plateau.jpg" alt="Enveloppe scellée à la cire, posée sur un plateau doré">
       </div>
     </div>
@@ -499,8 +511,8 @@
                 <a href="https://forms.gle/AMYZCN3haLunuXmx6" target="_blank" rel="noopener" class="btn btn-gold">Je m'abonne</a>
               </div>
               <div class="product-note">
-                <p>Chaque mois, un tirage de trois cartes pour lire les énergies qui traversent ta période et une clé pour avancer. Ta lettre arrive chez toi, accompagnée d'une illustration originale et d'un thé à déguster en la lisant.</p>
-                <p>Inscription avant le 15 du mois pour recevoir ta première lettre le mois suivant.</p>
+                <p>Chaque mois, un tirage de trois cartes pour lire les énergies qui traversent ta période : ce qui se transforme, ce qui cherche à émerger, et une clé pour avancer. Ta lettre arrive chez toi, accompagnée d'une illustration originale et d'un thé à déguster en la lisant.</p>
+                <p>Inscription avant le 15 du mois pour recevoir ta première lettre le mois suivant. Tu arrêtes quand tu veux, sans justification.</p>
               </div>
             </div>
           </div>
@@ -650,8 +662,29 @@
     var dots = Array.from(dotsWrap.children);
 
     function slideWidth(){ return slides[0].getBoundingClientRect().width + 22; }
+
+    function updateEdges(){
+      var maxScroll = track.scrollWidth - track.clientWidth - 2;
+      var atStart = track.scrollLeft <= 2;
+      var atEnd = track.scrollLeft >= maxScroll;
+      prevBtn.disabled = atStart;
+      nextBtn.disabled = atEnd;
+      prevBtn.style.opacity = atStart ? '.35' : '1';
+      nextBtn.style.opacity = atEnd ? '.35' : '1';
+      prevBtn.style.pointerEvents = atStart ? 'none' : 'auto';
+      nextBtn.style.pointerEvents = atEnd ? 'none' : 'auto';
+    }
+
     prevBtn.addEventListener('click', function(){ track.scrollBy({ left: -slideWidth(), behavior:'smooth' }); });
     nextBtn.addEventListener('click', function(){ track.scrollBy({ left: slideWidth(), behavior:'smooth' }); });
+
+    var scrollTimer;
+    track.addEventListener('scroll', function(){
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(updateEdges, 60);
+    });
+    window.addEventListener('resize', updateEdges);
+    updateEdges();
 
     if ('IntersectionObserver' in window){
       var io = new IntersectionObserver(function(entries){
