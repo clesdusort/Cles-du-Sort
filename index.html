@@ -37,11 +37,10 @@
     --r-md:18px;
   }
   *{box-sizing:border-box;}
-  html{scroll-behavior:smooth; overflow-x:hidden; width:100%;}
+  html{scroll-behavior:smooth;}
   body{
     margin:0; font-family:var(--sans); color:var(--black); background:var(--white);
     line-height:1.65; -webkit-font-smoothing:antialiased;
-    overflow-x:hidden; width:100%;
   }
   img{max-width:100%; display:block;}
   a{color:inherit;}
@@ -283,6 +282,8 @@
     font-size:13px; color:#777;
   }
 
+  main{overflow-x:hidden; width:100%; display:block;}
+  footer{overflow-x:hidden; width:100%;}
   ::selection{background:var(--gold); color:var(--ink);}
 
   /* ---------- Cookie banner ---------- */
@@ -670,7 +671,7 @@
     </div>
     <div class="footer-bottom">
       <span>&copy; 2026 Clés du Sort</span>
-      <span>Micro-entreprise &middot; Homemade - Made in France</span>
+      <span>Micro-entreprise &middot; Oracle de Belline</span>
     </div>
   </div>
 </footer>
