@@ -6,6 +6,19 @@
 <title>Clés du Sort — Correspondances ésotériques</title>
 <meta name="description" content="Clés du Sort : des correspondances ésotériques fabriquées à la main. L'enveloppe est la lettre : elle se déplie pour révéler ta guidance, tirée dans l'Oracle de Belline." />
 <meta name="google-site-verification" content="yxgIgZHGXi1Odm66tInwfiYYcrzByvR3q0FlR_V-C14" />
+<!-- Google tag (gtag.js) — ne se déclenche qu'après consentement cookies, voir bandeau en bas de page -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  function cdsEnableAnalytics(){
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=G-WCRB0J95W6';
+    document.head.appendChild(s);
+    gtag('js', new Date());
+    gtag('config', 'G-WCRB0J95W6');
+  }
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -271,6 +284,30 @@
 
   ::selection{background:var(--gold); color:var(--ink);}
 
+  /* ---------- Cookie banner ---------- */
+  .cookie-banner{
+    position:fixed; left:0; right:0; bottom:0; z-index:9000;
+    background:var(--ink); color:var(--white);
+    padding:20px 26px; box-shadow:0 -10px 30px rgba(0,0,0,.25);
+    display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap;
+    transform:translateY(110%); transition:transform .4s ease;
+  }
+  .cookie-banner.visible{transform:translateY(0);}
+  .cookie-banner p{margin:0; font-size:13.5px; color:#e2e1ef; max-width:640px; line-height:1.55;}
+  .cookie-banner a{color:var(--gold); text-decoration:underline;}
+  .cookie-actions{display:flex; gap:10px; flex-wrap:wrap; flex-shrink:0;}
+  .btn-ghost-white{
+    background:transparent; color:var(--white); border:1.5px solid rgba(255,255,255,.5);
+  }
+  .btn-ghost-white:hover{background:rgba(255,255,255,.1); border-color:var(--white);}
+  .cookie-btn{padding:11px 22px; font-size:13.5px;}
+  #cookieManageLink{cursor:pointer;}
+  @media (max-width:640px){
+    .cookie-banner{padding:18px 18px 20px; flex-direction:column; align-items:stretch; text-align:left;}
+    .cookie-actions{justify-content:stretch;}
+    .cookie-actions .btn{flex:1;}
+  }
+
   /* ---------- Extra mobile hardening ---------- */
   @media (max-width:600px){
     .wrap{padding:0 20px;}
@@ -348,7 +385,7 @@
       <button type="submit" class="btn btn-gold btn-block">Rejoindre les pionnières</button>
     </form>
     <p class="gate-count">Places limitées — <strong>30 pionnières maximum</strong> pour ce premier lancement.</p>
-    <a href="#" id="gatePreview" style="display:block; margin-top:26px; font-size:11px; color:rgba(255,255,255,.25); text-decoration:none;">aperçu</a>
+    <a href="#" id="gatePreview" style="display:block; margin-top:26px; font-size:11px; color:transparent; text-decoration:none; user-select:none;">aperçu</a>
   </div>
 </div>
 
@@ -512,8 +549,8 @@
                 <a href="https://forms.gle/AMYZCN3haLunuXmx6" target="_blank" rel="noopener" class="btn btn-gold">Je m'abonne</a>
               </div>
               <div class="product-note">
-                <p>Chaque mois, un tirage de trois cartes pour lire les énergies qui traversent ta période : ce qui se transforme, ce qui cherche à émerger, et une clé pour avancer. Ta lettre arrive chez toi, accompagnée d'une illustration originale et d'un thé à déguster en la lisant.</p>
-                <p>Inscription avant le 15 du mois pour recevoir ta première lettre le mois suivant. Tu arrêtes quand tu veux, sans justification.</p>
+                <p>Chaque mois, un tirage de trois cartes pour lire les énergies qui traversent ta période et une clé pour avancer. Ta lettre arrive chez toi, accompagnée d'une illustration originale et d'un thé à déguster en la lisant.</p>
+                <p>Inscription avant le 15 du mois pour recevoir ta première lettre le mois suivant.</p>
               </div>
             </div>
           </div>
@@ -618,6 +655,7 @@
           <li><a href="#correspondances">Correspondances</a></li>
           <li><a href="mentions-legales.html">Mentions légales</a></li>
           <li><a href="mentions-legales.html#cgv">CGV</a></li>
+          <li><a href="#" id="cookieManageLink">Gérer mes cookies</a></li>
         </ul>
       </div>
       <div>
@@ -635,6 +673,14 @@
     </div>
   </div>
 </footer>
+
+<div class="cookie-banner" id="cookieBanner">
+  <p>Ce site utilise Google Analytics pour comprendre comment tu navigues, uniquement si tu l'acceptes. Aucune donnée n'est vendue ni partagée à des fins publicitaires. Plus d'infos dans nos <a href="mentions-legales.html">mentions légales</a>.</p>
+  <div class="cookie-actions">
+    <button class="btn btn-ghost-white cookie-btn" id="cookieRefuse">Refuser</button>
+    <button class="btn btn-gold cookie-btn" id="cookieAccept">Accepter</button>
+  </div>
+</div>
 
 <script>
   // Mobile nav toggle
@@ -703,6 +749,32 @@
 
   setupCarousel('carTrack','carDots','carPrev','carNext');
   setupCarousel('prodTrack','prodDots','prodPrev','prodNext');
+
+  // Cookie consent
+  var cookieBanner = document.getElementById('cookieBanner');
+  var cookieAccept = document.getElementById('cookieAccept');
+  var cookieRefuse = document.getElementById('cookieRefuse');
+  var consent = localStorage.getItem('cds_cookie_consent');
+
+  if (consent === 'accepted') {
+    cdsEnableAnalytics();
+  } else if (consent !== 'refused') {
+    cookieBanner.classList.add('visible');
+  }
+
+  cookieAccept.addEventListener('click', function(){
+    localStorage.setItem('cds_cookie_consent', 'accepted');
+    cdsEnableAnalytics();
+    cookieBanner.classList.remove('visible');
+  });
+  cookieRefuse.addEventListener('click', function(){
+    localStorage.setItem('cds_cookie_consent', 'refused');
+    cookieBanner.classList.remove('visible');
+  });
+  document.getElementById('cookieManageLink').addEventListener('click', function(e){
+    e.preventDefault();
+    cookieBanner.classList.add('visible');
+  });
 </script>
 
 </body>
