@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mentions légales &amp; CGV — Clés du Sort</title>
+<meta name="robots" content="noindex" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#272757;
+    --gold:#EFBF04;
+    --gold-deep:#b98f02;
+    --white:#ffffff;
+    --black:#0c0c14;
+    --paper:#faf9fc;
+    --line:#e9e7f2;
+    --sans:'Open Sans', sans-serif;
+    --maxw:960px;
+    --r-lg:28px;
+    --r-md:18px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; font-family:var(--sans); color:var(--black); background:var(--white);
+    line-height:1.7; -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%; display:block;}
+  a{color:var(--ink);}
+  h1,h2,h3{color:var(--ink); font-weight:800; line-height:1.15;}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 32px;}
+
+  .kicker{
+    display:flex; align-items:center; gap:10px; margin-bottom:14px;
+    font-weight:800; letter-spacing:.02em; text-transform:uppercase; color:var(--black);
+    font-size:24px;
+  }
+  .kicker img{width:56px; height:auto;}
+
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    font-family:var(--sans); font-weight:700; font-size:14.5px;
+    padding:13px 26px; border-radius:999px; text-decoration:none; border:none;
+    cursor:pointer; transition:all .25s ease; white-space:nowrap;
+  }
+  .btn-navy{background:var(--ink); color:var(--white);}
+  .btn-navy:hover{background:#1b1b45; transform:translateY(-2px);}
+
+  /* ---- Nav (identique au site) ---- */
+  header.site-nav{
+    position:sticky; top:0; z-index:60; background:var(--white);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:1240px; margin:0 auto; padding:16px 32px;
+    display:flex; align-items:center; justify-content:space-between; gap:20px;
+  }
+  .logo-img{height:44px; width:auto;}
+  nav.links{display:flex; align-items:center; gap:34px;}
+  nav.links a{
+    font-size:13px; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
+    text-decoration:none; color:var(--ink); padding-top:10px; border-top:1.5px solid var(--line);
+  }
+  nav.links a:hover{border-color:var(--gold); color:var(--gold-deep);}
+  @media (max-width:760px){ nav.links{display:none;} }
+
+  /* ---- Page header ---- */
+  .legal-hero{background:var(--paper); padding:56px 0 36px; text-align:center;}
+  .legal-hero h1{font-size:clamp(30px,4.6vw,44px); margin:0 0 10px; text-transform:uppercase;}
+  .legal-hero p{max-width:560px; margin:0 auto; color:#333;}
+
+  /* ---- Notice box ---- */
+  .notice{
+    max-width:var(--maxw); margin:32px auto 0; padding:24px 28px;
+    background:#fdf6db; border:1.5px solid var(--gold); border-radius:var(--r-md);
+  }
+  .notice h3{font-size:17px; margin:0 0 10px; color:var(--ink);}
+  .notice ul{margin:10px 0 0; padding-left:20px;}
+  .notice li{margin-bottom:6px; font-size:14px;}
+  .notice p{margin:0 0 8px; font-size:14px;}
+
+  /* ---- TOC ---- */
+  .toc{max-width:var(--maxw); margin:36px auto 0; display:flex; gap:12px; flex-wrap:wrap; justify-content:center;}
+  .toc a{
+    font-size:13px; font-weight:700; text-decoration:none; color:var(--ink);
+    border:1.5px solid var(--line); border-radius:999px; padding:9px 18px; transition:all .2s ease;
+  }
+  .toc a:hover{border-color:var(--gold); background:var(--gold);}
+
+  /* ---- Content ---- */
+  main.legal-body{max-width:var(--maxw); margin:0 auto; padding:56px 32px 90px;}
+  .legal-section{margin-bottom:56px; scroll-margin-top:100px;}
+  .legal-section > p.intro{color:#555; margin-top:0; margin-bottom:28px; font-size:14.5px;}
+
+  .article{margin-bottom:32px;}
+  .article h3{font-size:18px; margin-bottom:10px; color:var(--ink); font-weight:800;}
+  .article p{margin:0 0 12px; color:#222; font-size:14.5px;}
+  .article ul{margin:0 0 12px; padding-left:22px;}
+  .article li{margin-bottom:6px; font-size:14.5px;}
+  .article table{width:100%; border-collapse:collapse; margin:14px 0 18px; font-size:14px;}
+  .article th, .article td{text-align:left; padding:10px 14px; border-bottom:1px solid var(--line);}
+  .article th{font-weight:700; color:var(--ink); background:var(--paper);}
+
+  .fill{
+    background:#fff4f4; color:#a3221f; padding:1px 7px; border-radius:5px;
+    font-size:.94em; font-weight:700;
+  }
+
+  hr.sep{border:none; border-top:1px solid var(--line); margin:50px 0;}
+
+  /* ---- Footer (identique au site) ---- */
+  footer{background:var(--white); border-top:1px solid var(--line); padding:50px 0 30px;}
+  .footer-grid{display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:40px; margin-bottom:40px;}
+  @media (max-width:760px){ .footer-grid{grid-template-columns:1fr; gap:30px;} }
+  footer h4{font-size:12.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink); margin-bottom:16px; font-weight:800;}
+  footer ul{list-style:none; padding:0; margin:0;}
+  footer li{margin-bottom:10px;}
+  footer a{text-decoration:none; font-size:14.5px; color:#333;}
+  footer a:hover{color:var(--gold-deep);}
+  footer .foot-logo{height:40px; margin-bottom:14px;}
+  .footer-bottom{
+    border-top:1px solid var(--line); padding-top:22px;
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
+    font-size:13px; color:#777;
+  }
+  ::selection{background:var(--gold); color:var(--ink);}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <div class="nav-inner">
+    <a href="index.html"><img class="logo-img" src="assets/logo-noir-baseline.png" alt="Clés du Sort"></a>
+    <nav class="links">
+      <a href="index.html#concept">Le concept</a>
+      <a href="index.html#correspondances">Les correspondances</a>
+    </nav>
+    <a href="index.html" class="btn btn-navy">Retour au site</a>
+  </div>
+</header>
+
+<section class="legal-hero">
+  <div class="wrap">
+    <p style="font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--gold-deep); margin-bottom:12px;">Informations légales</p>
+    <h1>Mentions légales &amp; CGV</h1>
+    <p>Toutes les informations sur l'édition de ce site et les conditions applicables aux Correspondances Clés du Sort.</p>
+  </div>
+</section>
+
+<div class="toc">
+  <a href="#mentions-legales">Mentions légales</a>
+  <a href="#cgv">Conditions Générales de Vente</a>
+</div>
+
+<main class="legal-body">
+
+  <!-- MENTIONS LÉGALES -->
+  <section id="mentions-legales" class="legal-section">
+    <div class="kicker"><img src="assets/picto-simple.png" alt="">Mentions légales</div>
+    <p class="intro">Conformément aux articles 6-III et 19 de la loi n°2004-575 du 21 juin 2004 pour la confiance dans l'économie numérique (LCEN), il est précisé aux utilisateurs du site clesdusort.fr l'identité des différents intervenants dans le cadre de sa réalisation et de son suivi.</p>
+
+    <div class="article">
+      <h3>1. Éditeur du site</h3>
+      <p>
+        Le site clesdusort.fr est édité par <strong>Carole Mlakar</strong>, exerçant sous le statut de micro-entrepreneur (entrepreneur individuel), sous le nom commercial <strong>Clés du Sort</strong>.
+      </p>
+      <ul>
+        <li>Adresse : 11 rue Lacroix Robert, 78800 Houilles</li>
+        <li>SIRET : 107 760 522 00014</li>
+        <li>Code APE : 4791B (Vente à distance sur catalogue spécialisé)</li>
+        <li>Email : <a href="mailto:cles.dusort@gmail.com">cles.dusort@gmail.com</a></li>
+        <li>TVA non applicable, article 293 B du Code général des impôts</li>
+      </ul>
+    </div>
+
+    <div class="article">
+      <h3>2. Directeur de la publication</h3>
+      <p>Le directeur de la publication est <strong>Carole Mlakar</strong>, en sa qualité d'éditrice du site.</p>
+    </div>
+
+    <div class="article">
+      <h3>3. Hébergement</h3>
+      <p>Le site clesdusort.fr est hébergé par :</p>
+      <ul>
+        <li>GitHub, Inc.</li>
+        <li>88 Colin P Kelly Jr St, San Francisco, CA 94107, États-Unis</li>
+        <li><a href="https://github.com" target="_blank" rel="noopener">github.com</a></li>
+      </ul>
+    </div>
+
+    <div class="article">
+      <h3>4. Propriété intellectuelle</h3>
+      <p>L'ensemble des éléments présents sur ce site (textes, illustrations, mise en page, identité visuelle, logo) est la propriété exclusive de Clés du Sort, sauf mention contraire. Toute reproduction, représentation, modification ou exploitation, totale ou partielle, sans autorisation préalable écrite, est interdite et pourrait constituer une contrefaçon.</p>
+    </div>
+
+    <div class="article">
+      <h3>5. Données personnelles &amp; RGPD</h3>
+      <p>Les informations recueillies via le formulaire d'inscription (nom, adresse postale, date de naissance le cas échéant, email) sont nécessaires exclusivement à la préparation et à l'envoi de ta correspondance. Elles ne sont ni revendues, ni transmises à des tiers à des fins commerciales.</p>
+      <p>Conformément au Règlement Général sur la Protection des Données (RGPD) et à la loi Informatique et Libertés, tu disposes d'un droit d'accès, de rectification, de suppression et d'opposition sur tes données personnelles. Pour l'exercer, contacte-nous à <a href="mailto:cles.dusort@gmail.com">cles.dusort@gmail.com</a>.</p>
+    </div>
+
+    <div class="article">
+      <h3>6. Cookies</h3>
+      <p>Ce site utilise Google Analytics uniquement après consentement, via le bandeau cookies affiché en bas de la page d'accueil. Aucune donnée n'est collectée avant acceptation, et tu peux revenir sur ton choix à tout moment via le lien "Gérer mes cookies" dans le pied de page.</p>
+    </div>
+  </section>
+
+  <hr class="sep">
+
+  <!-- CGV -->
+  <section id="cgv" class="legal-section">
+    <div class="kicker"><img src="assets/picto-simple.png" alt="">Conditions Générales de Vente</div>
+    <p class="intro">Dernière mise à jour : 20 juillet 2026. Les présentes CGV s'appliquent à toute commande passée sur clesdusort.fr, sans exception ni réserve.</p>
+
+    <div class="article">
+      <h3>Article 1 — Objet</h3>
+      <p>Les présentes CGV définissent les droits et obligations de Clés du Sort et de ses clients (ci-après "tu"/"toi") dans le cadre de la vente des Correspondances proposées sur le site clesdusort.fr.</p>
+    </div>
+
+    <div class="article">
+      <h3>Article 2 — Prestations proposées et prix</h3>
+      <p>Clés du Sort propose des lectures de cartes personnalisées (Oracle de Belline), rédigées et fabriquées à la main, puis envoyées par voie postale.</p>
+      <table>
+        <thead>
+          <tr><th>Prestation</th><th>Tarif</th><th>Fréquence</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Guidance Mensuelle</td><td>34,99 €</td><td>Abonnement mensuel, sans engagement</td></tr>
+          <tr><td>Guidance Personnalisée</td><td>39,99 €</td><td>Paiement unique, sur demande</td></tr>
+          <tr><td>Guidance Anniversaire</td><td>49,99 €</td><td>Paiement unique, sur demande</td></tr>
+        </tbody>
+      </table>
+      <p>Les prix sont indiqués en euros. Clés du Sort exerçant sous le régime de la micro-entreprise, la TVA n'est pas applicable (article 293 B du CGI).</p>
+    </div>
+
+    <div class="article">
+      <h3>Article 3 — Commande</h3>
+      <p>Toute commande implique le paiement en ligne via la plateforme sécurisée Stripe, puis le remplissage d'un formulaire d'informations (adresse postale, et selon la prestation : date de naissance ou question précise). La commande n'est considérée comme définitive qu'une fois le paiement confirmé et le formulaire complété.</p>
+    </div>
+
+    <div class="article">
+      <h3>Article 4 — Paiement</h3>
+      <p>Le paiement s'effectue exclusivement en ligne par carte bancaire via Stripe. Pour la Guidance Mensuelle, le premier prélèvement a lieu au moment de l'inscription, puis à échéance mensuelle, jusqu'à résiliation par le client.</p>
+    </div>
+
+    <div class="article">
+      <h3>Article 5 — Délais de fabrication et d'envoi</h3>
+      <ul>
+        <li><strong>Guidance Mensuelle</strong> : toute inscription enregistrée avant le 15 du mois donne lieu à un envoi le mois suivant. Toute inscription après le 15 décale l'envoi au mois d'après.</li>
+        <li><strong>Guidance Personnalisée &amp; Guidance Anniversaire</strong> : délai de préparation d'environ deux semaines à compter de la réception du formulaire complet.</li>
+      </ul>
+      <p>Ces délais sont donnés à titre indicatif, chaque courrier étant fabriqué entièrement à la main. Clés du Sort ne saurait être tenue responsable des délais d'acheminement postal, qui échappent à son contrôle.</p>
+    </div>
+
+    <div class="article">
+      <h3>Article 6 — Droit de rétractation</h3>
+      <p>Conformément à l'article L221-18 du Code de la consommation, tu disposes en principe d'un délai de 14 jours pour te rétracter d'un achat effectué à distance.</p>
+      <p>Toutefois, l'article L221-28 3° du Code de la consommation exclut ce droit pour "la fourniture de biens confectionnés selon les spécifications du consommateur ou nettement personnalisés". Chaque Correspondance est réalisée à partir d'éléments propres à chaque client (tirage de cartes individuel et, pour la Guidance Personnalisée ou Anniversaire, une question ou une date de naissance précises) : elle constitue donc un bien nettement personnalisé, non réutilisable pour une autre personne. Le droit de rétractation ne s'applique donc pas une fois la commande passée et le formulaire complété.</p>
+      <p>Pour la Guidance Mensuelle (abonnement), tu peux résilier à tout moment, sans justification ni frais, avec effet à la fin du mois en cours.</p>
+    </div>
+
+    <div class="article">
+      <h3>Article 7 — Résiliation de l'abonnement (Guidance Mensuelle)</h3>
+      <p>Tu peux résilier ton abonnement à tout moment, gratuitement, en envoyant un email de demande de résiliation à <a href="mailto:cles.dusort@gmail.com">cles.dusort@gmail.com</a>. La résiliation prend effet à la fin de la période déjà payée.</p>
+    </div>
+
+    <div class="article">
+      <h3>Article 8 — Responsabilité</h3>
+      <p>Les Guidances proposées par Clés du Sort relèvent d'un accompagnement personnel et introspectif, sans prétention à un quelconque savoir prédictif garanti. Elles ne sauraient se substituer à un avis médical, psychologique, juridique ou financier professionnel.</p>
+    </div>
+
+    <div class="article">
+      <h3>Article 9 — Médiation de la consommation</h3>
+      <p>Conformément à l'article L616-1 du Code de la consommation, en cas de litige non résolu directement avec Clés du Sort, tu peux recourir gratuitement à un médiateur de la consommation.</p>
+    </div>
+
+    <div class="article">
+      <h3>Article 10 — Droit applicable</h3>
+      <p>Les présentes CGV sont soumises au droit français. En cas de litige, et à défaut de résolution amiable, les tribunaux français seront seuls compétents.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <img class="foot-logo" src="assets/logo-noir-baseline.png" alt="Clés du Sort">
+        <p style="max-width:280px; font-size:14px; color:#444;">Correspondance / snail mail ésotérique par courrier postal, entièrement fait à la main.</p>
+      </div>
+      <div>
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="index.html#concept">Le concept</a></li>
+          <li><a href="index.html#correspondances">Correspondances</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:cles.dusort@gmail.com">cles.dusort@gmail.com</a></li>
+          <li><a href="https://forms.gle/AMYZCN3haLunuXmx6">Formulaire d'inscription</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Clés du Sort</span>
+      <span>Micro-entreprise &middot; Oracle de Belline</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
