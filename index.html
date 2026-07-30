@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Clés du Sort — Correspondances ésotériques</title>
-<meta name="description" content="Clés du Sort : des correspondances ésotériques fabriquées à la main. L'enveloppe est la lettre : elle se déplie pour révéler ta guidance, tirée dans l'Oracle de Belline." />
+<meta name="description" content="Clés du Sort : guidance tirée dans l'Oracle de Belline, écrite et scellée à la main, livrée par la poste. Une vraie lettre à recevoir, pas un mail à lire." />
 <meta name="google-site-verification" content="yxgIgZHGXi1Odm66tInwfiYYcrzByvR3q0FlR_V-C14" />
 <!-- Google tag (gtag.js) — ne se déclenche qu'après consentement cookies, voir bandeau en bas de page -->
 <script>
@@ -198,7 +198,7 @@
   .env-photo img{max-width:340px; border-radius:4px;}
 
   .oracle-head{display:flex; align-items:flex-start; justify-content:space-between; gap:20px; flex-wrap:wrap; margin-bottom:34px;}
-  .oracle-head-text{max-width:640px;}
+  .oracle-head-text{max-width:none; width:100%;}
   .oracle-head-text p{color:#333; margin:0;}
 
   .product-track{
@@ -232,6 +232,7 @@
     background:var(--white); color:var(--black); border-radius:var(--r-md); padding:18px 20px;
     display:flex; flex-direction:column; justify-content:center;
   }
+  .product-note img{border-radius:12px; margin-bottom:14px; max-height:150px; width:100%; object-fit:cover;}
   .product-note p{font-weight:700; font-size:13px; margin:0 0 10px; color:var(--black); line-height:1.55;}
   .product-note p:last-child{margin-bottom:0;}
   .product-carousel-wrap{position:relative;}
@@ -249,6 +250,109 @@
     .product-carousel-wrap .car-btn{width:38px; height:38px;}
   }
 
+  /* ---------- Stepper produits (1-2-3) + panneaux pleine largeur ---------- */
+  .product-stepper{display:flex; gap:12px; margin-bottom:32px; flex-wrap:wrap;}
+  .step-btn{
+    display:flex; align-items:center; gap:10px; padding:11px 20px 11px 12px; border-radius:999px;
+    border:1.5px solid var(--line); background:var(--white); cursor:pointer; font-family:var(--sans);
+    font-weight:700; font-size:14px; color:var(--ink); transition:all .25s ease;
+  }
+  .step-btn .step-num{
+    display:flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:50%;
+    background:var(--paper); color:var(--ink); font-size:13px; font-weight:800; transition:all .25s ease; flex-shrink:0;
+  }
+  .step-btn.active{border-color:var(--ink); background:var(--ink); color:var(--white);}
+  .step-btn.active .step-num{background:var(--gold); color:var(--ink);}
+  .step-btn:hover:not(.active){border-color:var(--gold);}
+
+  .product-panel-full{
+    scroll-snap-align:start; flex:0 0 100%; width:100%;
+    display:grid; grid-template-columns:.9fr 1.1fr; gap:44px; align-items:center;
+    background:var(--ink); border-radius:var(--r-lg); padding:40px; color:var(--white);
+  }
+  .product-panels{
+    display:flex; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; -webkit-overflow-scrolling:touch;
+  }
+  .product-panels::-webkit-scrollbar{display:none;}
+  .product-full-carousel-wrap{position:relative;}
+  .product-full-carousel-wrap .car-btn{
+    position:absolute; top:auto; bottom:14px; transform:none; z-index:5;
+    background:rgba(255,255,255,.85); backdrop-filter:blur(4px); border-color:transparent;
+    box-shadow:0 6px 16px -6px rgba(39,39,87,.35);
+  }
+  .product-full-carousel-wrap .car-btn:hover{background:var(--ink);}
+  .product-full-carousel-wrap .car-btn:hover svg{stroke:var(--white);}
+  .product-full-carousel-wrap #prodFullPrev{left:6px;}
+  .product-full-carousel-wrap #prodFullNext{right:6px;}
+  @media (max-width:900px){
+    .product-full-carousel-wrap .car-btn{width:38px; height:38px;}
+  }
+  .product-panel-full.reverse{grid-template-columns:1.1fr .9fr;}
+  .product-panel-full.reverse .panel-photo{order:2;}
+  .panel-photo{border-radius:var(--r-md); overflow:hidden; height:100%; min-height:300px;}
+  .panel-photo img{width:100%; height:100%; min-height:300px; object-fit:cover; display:block;}
+  .panel-content .kicker{color:var(--white); margin-bottom:6px;}
+  .panel-badge{
+    display:inline-block; background:var(--gold); color:var(--ink); font-size:11.5px; font-weight:800;
+    letter-spacing:.04em; text-transform:uppercase; padding:5px 14px; border-radius:999px; margin-bottom:14px;
+  }
+  .panel-badge-alt{background:var(--white); color:var(--ink);}
+  .panel-price{font-size:28px; font-weight:800; color:var(--gold); margin-bottom:20px;}
+  .panel-price span{font-family:var(--sans); font-size:13.5px; font-weight:600; color:#cfcee6;}
+  .panel-content ul{list-style:none; margin:0 0 22px; padding:0;}
+  .panel-content li{position:relative; padding-left:20px; margin-bottom:10px; font-size:14.5px; line-height:1.5;}
+  .panel-content li::before{content:""; position:absolute; left:0; top:8px; width:6px; height:6px; border-radius:50%; background:var(--gold);}
+  .panel-desc{font-size:13.5px; color:#dcdbf0; margin:18px 0 0;}
+  .panel-desc:first-of-type{margin-top:20px;}
+  .panel-note{color:var(--gold); font-size:13px; margin-top:10px;}
+  @media (max-width:860px){
+    .product-panel-full, .product-panel-full.reverse{grid-template-columns:1fr; padding:26px;}
+    .product-panel-full.reverse .panel-photo{order:-1;}
+    .panel-photo, .panel-photo img{min-height:220px;}
+  }
+
+  /* ---------- Galerie photo (carrousel) ---------- */
+  .gallery-track{
+    display:flex; gap:18px; overflow-x:auto; scroll-snap-type:x mandatory;
+    padding:4px 4px 10px; margin:0 -4px; scrollbar-width:none; -webkit-overflow-scrolling:touch;
+  }
+  .gallery-track::-webkit-scrollbar{display:none;}
+  .gallery-slide{scroll-snap-align:start; flex:0 0 auto; width:320px;}
+  .gallery-slide img{width:100%; height:260px; object-fit:cover; border-radius:var(--r-md); display:block;}
+  .gallery-carousel-wrap{position:relative;}
+  .gallery-carousel-wrap .car-btn{
+    position:absolute; top:auto; bottom:14px; transform:none; z-index:5;
+    background:rgba(255,255,255,.7); backdrop-filter:blur(4px); border-color:transparent;
+    box-shadow:0 6px 16px -6px rgba(39,39,87,.35);
+  }
+  .gallery-carousel-wrap .car-btn:hover{background:var(--ink);}
+  .gallery-carousel-wrap .car-btn:hover svg{stroke:var(--white);}
+  .gallery-carousel-wrap #galPrev{left:-6px;}
+  .gallery-carousel-wrap #galNext{right:-6px;}
+  @media (max-width:640px){
+    .gallery-slide{width:78vw;}
+    .gallery-slide img{height:220px;}
+    .gallery-carousel-wrap .car-btn{width:38px; height:38px;}
+  }
+
+  /* ---------- Bannière newsletter ---------- */
+  .newsletter-banner{
+    background:var(--ink); border-radius:var(--r-lg); padding:36px 40px; color:var(--white);
+    display:flex; align-items:center; justify-content:space-between; gap:32px; flex-wrap:wrap;
+  }
+  .newsletter-banner .kicker{color:var(--white); margin-bottom:8px;}
+  .newsletter-banner p{color:#dcdbf0; margin:0; max-width:420px;}
+  .newsletter-form{display:flex; gap:10px; flex-wrap:wrap;}
+  .newsletter-form input{
+    padding:13px 16px; border-radius:10px; border:none; font-family:var(--sans); font-size:14.5px; min-width:230px;
+  }
+  .newsletter-form input:focus{outline:2px solid var(--gold);}
+  @media (max-width:700px){
+    .newsletter-banner{flex-direction:column; align-items:flex-start; padding:28px;}
+    .newsletter-form{width:100%;}
+    .newsletter-form input{flex:1;}
+  }
+
   /* ---------- Sorcières teaser ---------- */
   .sorc-block{text-align:left;}
   .sorc-block p.desc{color:#333; margin-bottom:26px;}
@@ -262,6 +366,17 @@
   .cta-social{margin-bottom:30px;}
   .cta-social p{font-weight:700; margin-bottom:12px; color:var(--white);}
   .cta-social img{height:34px; margin:0 auto;}
+
+  /* ---------- FAQ ---------- */
+  .faq-item{border-bottom:1px solid var(--line); padding:18px 0;}
+  .faq-item summary{
+    cursor:pointer; font-weight:700; font-size:15.5px; color:var(--ink);
+    list-style:none; display:flex; justify-content:space-between; align-items:center; gap:16px;
+  }
+  .faq-item summary::-webkit-details-marker{display:none;}
+  .faq-item summary::after{content:"+"; font-size:20px; color:var(--gold-deep); flex-shrink:0;}
+  .faq-item[open] summary::after{content:"−";}
+  .faq-item p{margin:12px 0 0; color:#444; font-size:14.5px;}
 
   /* ---------- Footer ---------- */
   footer{background:var(--white); padding:56px 0 30px; border-top:1px dashed #333;}
@@ -380,7 +495,7 @@
     <div class="gate-card">
       <div class="gate-badge">✨ Le site est en cours de finalisation</div>
       <h1>Clés du Sort arrive bientôt</h1>
-      <p class="gate-lede">Le correspondance "Courrier de l'Oracle" de Clés du Sort se prépare, en coulisses. En attendant l'ouverture, deviens l'un des <strong>10 pionniers</strong> du courrier et sois prévenu(e) en priorité.</p>
+      <p class="gate-lede">Le correspondance "Courrier de l'Oracle" de Clés du Sort se prépare, en coulisses. En attendant l'ouverture, deviens l'un des <strong>15 pionniers</strong> du courrier et sois prévenu(e) en priorité.</p>
 
       <form class="gate-form" id="gateForm">
         <div class="gate-field">
@@ -398,7 +513,7 @@
         </div>
         <button type="submit" class="btn btn-gold btn-block">Rejoindre les pionniers - le courrier sera reçu au mois de septembre 2026</button>
       </form>
-      <p class="gate-count">Places limitées — <strong>10 personnes maximum</strong> pour ce premier lancement.</p>
+      <p class="gate-count">Places limitées — <strong>15 personnes maximum</strong> pour ce premier lancement.</p>
       <a href="#" id="gatePreview" style="display:block; margin-top:26px; font-size:11px; color:transparent; text-decoration:none; user-select:none;">aperçu</a>
     </div>
   </div>
@@ -427,7 +542,7 @@
     <nav class="links" id="navLinks">
       <a href="#concept">Le concept</a>
       <a href="#correspondances">Les correspondances</a>
-      <a href="https://forms.gle/AMYZCN3haLunuXmx6" target="_blank" rel="noopener" class="nav-cta">Rejoindre le club</a>
+      <a href="inscription.html" class="nav-cta">Rejoindre le club</a>
     </nav>
     <button class="burger" id="burgerBtn" aria-label="Ouvrir le menu"><span></span><span></span><span></span></button>
   </div>
@@ -439,11 +554,12 @@
   <section class="hero">
     <div class="wrap">
       <div>
-        <h1>Clés du Sort te propose de recevoir un peu de magie dans ta boite aux lettres</h1>
+        <p style="font-size:12px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:#b98f02; margin-bottom:10px;">Club de correspondances ésotériques &middot; fait main &middot; livré par la poste</p>
+        <h1>Clés du Sort, le club de correspondances ésotériques faites à la main, encensées et scellées à la cire</h1>
         <div class="hero-photo hero-photo-mobile">
           <img src="assets/photo-plateau.jpg" alt="Enveloppe scellée à la cire, posée sur un plateau doré">
         </div>
-        <p class="lede">Ce n'est pas un mail. Pas une notification. Pas un post Instagram de plus. C'est une enveloppe faite pour toi, qui se déplie pour révéler un message, encensée et scellée à la cire pour garder le tout secret, avant de prendre la route jusqu'à toi.</p>
+        <p class="lede">Ce n'est pas un mail. Pas une notification. Pas un post Instagram de plus. C'est une enveloppe faite pour toi, qui se déplie pour révéler un message, encensée et scellée à la cire pour garder le tout secret, avant de prendre la route jusqu'à toi. Aujourd'hui avec le Courrier de l'Oracle, bientôt avec d'autres correspondances.</p>
         <a href="#correspondances" class="btn btn-navy">Découvrir les correspondances</a>
       </div>
       <div class="hero-photo hero-photo-desktop">
@@ -463,10 +579,12 @@
         <div class="concept-panel">
           <img class="concept-logo" src="assets/logo-blanc-sans-baseline.png" alt="Clés du Sort">
           <p>J'écris des courriers par voie postale. Pas de mail, pas de notification : juste le plaisir oublié d'avoir, dans sa boîte aux lettres, une lettre (pas une facture) qui nous est destinée.</p>
+          <p>Dans un quotidien saturé d'écrans et de notifications, c'est une vraie pause : un objet tangible et fait pour toi, en papier, cire et encens — une matière qui dure, à l'inverse de tout ce qui s'efface aussitôt lu.</p>
           <p>Chaque courrier est fabriqué à la main, de la création de l'enveloppe jusqu'à la rédaction de son contenu.</p>
           <p>Pas de lettre dans une enveloppe. L'enveloppe est la lettre. Faite à la main, elle se déplie entièrement pour révéler les messages que j'ai pour toi.</p>
           <p>Une fois terminée, je la parfume à l'encens pour les bonnes énergies, puis je la scelle d'un cachet de cire avant de la laisser prendre la route jusqu'à toi.</p>
           <p>Comme en 1920, mais version 2.0.</p>
+          <p style="font-size:12px; color:#a9a8cc; margin-top:-4px;">— Carole, artisane de correspondances ésotériques</p>
           <a href="#correspondances" class="btn btn-gold" style="white-space:nowrap;">Découvrir les correspondances</a>
         </div>
       </div>
@@ -480,6 +598,7 @@
       <div class="process-head">
         <h3>Le processus, étape par étape</h3>
       </div>
+      <p style="margin-top:-20px; margin-bottom:30px; color:#555; font-size:14.5px;">Ce processus s'applique à toutes les correspondances Clés du Sort, présentes et à venir.</p>
 
       <div class="process-carousel-wrap">
         <button class="car-btn" id="carPrev" aria-label="Précédent"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
@@ -488,8 +607,8 @@
         <div class="carousel-track" id="carTrack">
         <div class="process-slide">
           <div class="pnum">01</div>
-          <h4>Le tirage</h4>
-          <p>Je tire tes cartes dans l'Oracle de Belline, en tenant compte de ta demande ou de la période du mois.</p>
+          <h4>La préparation du contenu</h4>
+          <p>Selon la correspondance choisie : un tirage dans l'Oracle de Belline (ou un futur jeu partenaire), ou tout autre contenu pensé pour cette lettre précise.</p>
         </div>
         <div class="process-slide">
           <div class="pnum">02</div>
@@ -514,6 +633,7 @@
       </div>
       </div>
       <div class="carousel-dots" id="carDots"></div>
+      <p style="margin-top:26px; color:#555; font-size:14.5px;">Et ensuite ? Il ne te reste plus qu'à guetter ta boîte aux lettres — un rendez-vous à attendre, comme on en a de moins en moins.</p>
     </div>
   </section>
 
@@ -528,115 +648,125 @@
       </div>
 
       <div class="env-photo" style="margin-top:40px;">
-        <img src="assets/photo-lettre.png" alt="Enveloppe scellée à la cire">
+        <img src="assets/photo-lettre.jpg" alt="Enveloppe scellée à la cire">
       </div>
 
       <div class="oracle-head">
         <div class="oracle-head-text">
           <div class="kicker small"><img src="assets/picto-oracle.png" alt="" style="width:64px;">Le Courrier de l'Oracle</div>
-          <p>Trois façons de recevoir une guidance par courrier, chacune écrite, illustrée et scellée à la main.</p>
+          <p>Trois façons de recevoir une guidance par courrier, chacune écrite, illustrée et scellée à la main — un moment posé, rien que pour toi, pour faire le point sur où tu en es.</p>
+          <p style="margin-top:14px;">Chaque tirage s'appuie sur l'<strong>Oracle de Belline</strong>, un jeu de 53 cartes ancré dans la tradition française du tirage divinatoire, utilisé ici uniquement à but de divertissement. C'est le premier jeu de la maison — d'autres correspondances s'appuieront bientôt sur d'autres oracles et jeux de tarot, en partenariat avec leurs créateurs.</p>
         </div>
       </div>
 
-      <div class="product-carousel-wrap">
-        <button class="car-btn" id="prodPrev" aria-label="Précédent"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
-        <button class="car-btn" id="prodNext" aria-label="Suivant"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+      <div class="product-stepper" id="productStepper">
+        <button class="step-btn active" data-panel="0" type="button"><span class="step-num">1</span>Mensuelle</button>
+        <button class="step-btn" data-panel="1" type="button"><span class="step-num">2</span>Personnalisée</button>
+        <button class="step-btn" data-panel="2" type="button"><span class="step-num">3</span>Anniversaire</button>
+      </div>
 
-        <div class="product-track" id="prodTrack">
+      <div class="product-full-carousel-wrap">
+        <button class="car-btn" id="prodFullPrev" aria-label="Précédent"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+        <button class="car-btn" id="prodFullNext" aria-label="Suivant"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+
+      <div class="product-panels" id="productPanels">
 
         <!-- Guidance Mensuelle -->
-        <div class="product-slide">
-          <div class="product-card">
-            <div class="product-top">
-              <div class="kicker"><img src="assets/picto-oracle.png" alt="">La guidance mensuelle</div>
-              <div class="product-tag">Sans engagement</div>
-            </div>
-            <div class="product-price">34,99&nbsp;€ <span>/ mois</span></div>
-            <div class="product-body">
-              <div>
-                <ul>
-                  <li>Tirage personnalisé de 3 cartes (Oracle de Belline)</li>
-                  <li>Lettre entièrement écrite et fabriquée à la main</li>
-                  <li>Illustration originale incluse</li>
-                  <li>Enfumage à l'encens et scellage à la cire</li>
-                  <li>Un thé à déguster, et quelques surprises</li>
-                </ul>
-                <a href="https://forms.gle/AMYZCN3haLunuXmx6" target="_blank" rel="noopener" class="btn btn-gold">Je m'abonne</a>
-              </div>
-              <div class="product-note">
-                <p>Chaque mois, un tirage de 3 cartes pour lire les énergies qui traversent ta période et une clé pour avancer. Ta lettre arrive chez toi, accompagnée d'une illustration originale et d'un thé à déguster en la lisant.</p>
-                <p>Inscription avant le 15 du mois pour recevoir ta première lettre le mois suivant.</p>
-              </div>
-            </div>
+        <div class="product-panel-full" data-panel="0">
+          <div class="panel-photo"><img src="assets/photo-lettre.jpg" alt="Enveloppe du Courrier de l'Oracle scellée à la cire"></div>
+          <div class="panel-content">
+            <span class="panel-badge">Notre recommandation</span>
+            <div class="kicker"><img src="assets/picto-oracle.png" alt="">La guidance mensuelle</div>
+            <div class="panel-price">34,99&nbsp;€ <span>/ mois &middot; sans engagement</span></div>
+            <ul>
+              <li>Tirage personnalisé de 3 cartes (Oracle de Belline)</li>
+              <li>Lettre entièrement écrite et fabriquée à la main</li>
+              <li>Illustration originale incluse</li>
+              <li>Enfumage à l'encens et scellage à la cire</li>
+              <li>Un thé à déguster, et quelques surprises</li>
+            </ul>
+            <a href="inscription.html?produit=mensuelle" class="btn btn-gold">Je m'abonne</a>
+            <p class="panel-desc">Chaque mois, un tirage de 3 cartes pour lire les énergies qui traversent ta période et une clé pour avancer. Ta lettre arrive chez toi, accompagnée d'une illustration originale et d'un thé à déguster en la lisant.</p>
+            <p class="panel-desc">Inscription avant le 15 du mois pour recevoir ta première lettre le mois suivant.</p>
+            <p class="panel-note">Places limitées chaque mois : chaque lettre est fabriquée entièrement à la main, une par une.</p>
           </div>
         </div>
 
         <!-- Guidance Personnalisée -->
-        <div class="product-slide">
-          <div class="product-card">
-            <div class="product-top">
-              <div class="kicker"><img src="assets/picto-oracle.png" alt="">La guidance personnalisée</div>
-              <div class="product-tag">À (s')offrir</div>
-            </div>
-            <div class="product-price">39,99&nbsp;€</div>
-            <div class="product-body">
-              <div>
-                <ul>
-                  <li>Tirage personnalisé de 3 cartes (Oracle de Belline)</li>
-                  <li>Lettre entièrement écrite et fabriquée à la main</li>
-                  <li>Illustration originale incluse</li>
-                  <li>Enfumage à l'encens et scellage à la cire</li>
-                  <li>Un thé à déguster, et quelques surprises</li>
-                </ul>
-                <a href="https://forms.gle/AMYZCN3haLunuXmx6" target="_blank" rel="noopener" class="btn btn-gold">Je commande</a>
-              </div>
-              <div class="product-note">
-                <p>Guidance à choisir si tu as une question précise ou besoin d'un éclairage détaillé. Le tirage est construit spécifiquement pour répondre à ce qui t'occupe l'esprit en ce moment.</p>
-                <p>Comptez environ deux semaines de préparation à partir de la date de la commande.</p>
-              </div>
-            </div>
+        <div class="product-panel-full reverse" data-panel="1">
+          <div class="panel-photo"><img src="assets/photo-plateau.jpg" alt="Courrier de l'Oracle posé sur un plateau doré"></div>
+          <div class="panel-content">
+            <span class="panel-badge panel-badge-alt">À (s')offrir</span>
+            <div class="kicker"><img src="assets/picto-oracle.png" alt="">La guidance personnalisée</div>
+            <div class="panel-price">39,99&nbsp;€</div>
+            <ul>
+              <li>Tirage personnalisé de 3 cartes (Oracle de Belline)</li>
+              <li>Lettre entièrement écrite et fabriquée à la main</li>
+              <li>Illustration originale incluse</li>
+              <li>Enfumage à l'encens et scellage à la cire</li>
+              <li>Un thé à déguster, et quelques surprises</li>
+            </ul>
+            <a href="inscription.html?produit=personnalisee" class="btn btn-gold">Je commande</a>
+            <p class="panel-desc">Guidance à choisir si tu as une question précise ou besoin d'un éclairage détaillé. Le tirage est construit spécifiquement pour répondre à ce qui t'occupe l'esprit en ce moment.</p>
+            <p class="panel-desc">Comptez environ deux semaines de préparation à partir de la date de la commande.</p>
           </div>
         </div>
 
         <!-- Guidance Anniversaire -->
-        <div class="product-slide">
-          <div class="product-card">
-            <div class="product-top">
-              <div class="kicker"><img src="assets/picto-oracle.png" alt="">La guidance anniversaire</div>
-              <div class="product-tag">À (s')offrir</div>
-            </div>
-            <div class="product-price">49,99&nbsp;€</div>
-            <div class="product-body">
-              <div>
-                <ul>
-                  <li>Tirage personnalisé de 8 cartes (Oracle de Belline)</li>
-                  <li>Lettre entièrement écrite et fabriquée à la main</li>
-                  <li>Illustration originale incluse</li>
-                  <li>Enfumage à l'encens et scellage à la cire</li>
-                  <li>Un thé à déguster, et quelques surprises</li>
-                </ul>
-                <a href="https://forms.gle/AMYZCN3haLunuXmx6" target="_blank" rel="noopener" class="btn btn-gold">Je commande</a>
-              </div>
-              <div class="product-note">
-                <p>Un tirage de 8 cartes basé sur une date de naissance, pour explorer les énergies du nouveau cycle. Une synthèse sera faite selon les 4 trimestres à venir.</p>
-                <p>Comptez environ deux semaines de préparation à partir de la date de la commande.</p>
-              </div>
-            </div>
+        <div class="product-panel-full" data-panel="2">
+          <div class="panel-photo"><img src="assets/photo-main.jpg" alt="Main tenant l'enveloppe scellée à la cire"></div>
+          <div class="panel-content">
+            <span class="panel-badge panel-badge-alt">À (s')offrir</span>
+            <div class="kicker"><img src="assets/picto-oracle.png" alt="">La guidance anniversaire</div>
+            <div class="panel-price">49,99&nbsp;€</div>
+            <ul>
+              <li>Tirage personnalisé de 8 cartes (Oracle de Belline)</li>
+              <li>Lettre entièrement écrite et fabriquée à la main</li>
+              <li>Illustration originale incluse</li>
+              <li>Enfumage à l'encens et scellage à la cire</li>
+              <li>Un thé à déguster, et quelques surprises</li>
+            </ul>
+            <a href="inscription.html?produit=anniversaire" class="btn btn-gold">Je commande</a>
+            <p class="panel-desc">Un tirage de 8 cartes basé sur une date de naissance, pour explorer les énergies du nouveau cycle. Une synthèse sera faite selon les 4 trimestres à venir.</p>
+            <p class="panel-desc">Comptez environ deux semaines de préparation à partir de la date de la commande.</p>
           </div>
         </div>
 
       </div>
       </div>
-      <div class="carousel-dots" id="prodDots"></div>
     </div>
   </section>
 
-  <!-- COURRIER DES SORCIÈRES -->
+  <!-- GALERIE -->
+  <section class="section-tight">
+    <div class="wrap">
+      <div class="kicker" style="justify-content:center;"><img src="assets/picto-simple.png" alt="">Un aperçu en images</div>
+      <div class="gallery-carousel-wrap">
+        <button class="car-btn" id="galPrev" aria-label="Précédent"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+        <button class="car-btn" id="galNext" aria-label="Suivant"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+        <div class="gallery-track" id="galTrack">
+          <div class="gallery-slide"><img src="assets/photo-lettre.jpg" alt="Enveloppe scellée à la cire"></div>
+          <div class="gallery-slide"><img src="assets/photo-plateau.jpg" alt="Courrier de l'Oracle posé sur un plateau doré"></div>
+          <div class="gallery-slide"><img src="assets/photo-main.jpg" alt="Main tenant l'enveloppe scellée à la cire"></div>
+        </div>
+      </div>
+      <div class="carousel-dots" id="galDots"></div>
+    </div>
+  </section>
+
+  <!-- COURRIER DES SORCIÈRES — NEWSLETTER -->
   <section class="section-tight sorc-block">
     <div class="wrap">
-      <div class="kicker small"><img src="assets/picto-sorcieres.png" alt="" style="width:64px;">Le Courrier des Sorcières &mdash; Disponible à partir de Samhain !</div>
-      <p class="desc">Une nouvelle correspondance est en préparation. Envie d'être prévenue dès son ouverture&nbsp;?</p>
-      <a href="https://forms.gle/AMYZCN3haLunuXmx6" class="btn btn-navy">M'inscrire pour rester informé(e)</a>
+      <div class="newsletter-banner">
+        <div>
+          <div class="kicker small"><img src="assets/picto-sorcieres.png" alt="" style="width:44px;">Le Courrier des Sorcières &mdash; dès Samhain</div>
+          <p>Une nouvelle correspondance se prépare. Laisse ton email pour être prévenu(e) en priorité dès son ouverture, sans engagement.</p>
+        </div>
+        <form class="newsletter-form" id="newsletterForm">
+          <input type="email" id="newsletterEmail" placeholder="toi@exemple.com" required>
+          <button type="submit" class="btn btn-gold">Rester informé(e)</button>
+        </form>
+      </div>
     </div>
   </section>
 
@@ -650,7 +780,30 @@
         <p>Pour en savoir plus :<br>Clesdusort</p>
         <a href="https://linktr.ee/clesdusort" target="_blank" rel="noopener"><img src="assets/social-blanc.png" alt="Instagram et TikTok"></a>
       </div>
-      <a href="https://forms.gle/AMYZCN3haLunuXmx6" target="_blank" rel="noopener" class="btn btn-gold">Je commande</a>
+      <a href="inscription.html" class="btn btn-gold">Je commande</a>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="section-tight">
+    <div class="wrap" style="max-width:820px;">
+      <div class="kicker" style="justify-content:center;"><img src="assets/picto-simple.png" alt="">Questions fréquentes</div>
+      <details class="faq-item">
+        <summary>Est-ce que l'enveloppe laisse deviner ce qu'il y a dedans ?</summary>
+        <p>Non. L'enveloppe est pensée pour rester discrète : rien à l'extérieur n'indique son contenu ésotérique. Tu peux la recevoir sans qu'un colocataire, un proche ou le facteur ne devine de quoi il s'agit.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Combien de temps avant de recevoir ma lettre ?</summary>
+        <p>Pour la Guidance Mensuelle, inscris-toi avant le 15 du mois pour recevoir ta première lettre le mois suivant. Pour la Guidance Personnalisée et la Guidance Anniversaire, compte environ deux semaines de fabrication à partir de ta commande.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Comment je me désabonne de la Guidance Mensuelle ?</summary>
+        <p>La Guidance Mensuelle est sans engagement : tu peux arrêter à tout moment en m'écrivant à cles.dusort@gmail.com, sans justification à donner.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Que deviennent mes données personnelles ?</summary>
+        <p>Ton adresse postale, ta date de naissance et ton email servent uniquement à préparer et t'envoyer ta lettre. Rien n'est vendu ni partagé à des tiers. Plus de détails dans nos <a href="mentions-legales.html" style="color:var(--gold-deep);">mentions légales</a>.</p>
+      </details>
     </div>
   </section>
 
@@ -763,7 +916,72 @@
   }
 
   setupCarousel('carTrack','carDots','carPrev','carNext');
-  setupCarousel('prodTrack','prodDots','prodPrev','prodNext');
+  setupCarousel('galTrack','galDots','galPrev','galNext');
+
+  // Carrousel produits pleine largeur : swipe + flèches, synchronisé avec les pastilles 1-2-3
+  (function(){
+    var track = document.getElementById('productPanels');
+    var stepBtns = Array.from(document.querySelectorAll('#productStepper .step-btn'));
+    var prevBtn = document.getElementById('prodFullPrev');
+    var nextBtn = document.getElementById('prodFullNext');
+    var slides = Array.from(track.children);
+
+    stepBtns.forEach(function(btn, i){
+      btn.addEventListener('click', function(){
+        slides[i].scrollIntoView({ behavior:'smooth', inline:'start', block:'nearest' });
+      });
+    });
+
+    function slideWidth(){ return slides[0].getBoundingClientRect().width; }
+
+    function updateEdges(){
+      var maxScroll = track.scrollWidth - track.clientWidth - 2;
+      var atStart = track.scrollLeft <= 2;
+      var atEnd = track.scrollLeft >= maxScroll;
+      prevBtn.disabled = atStart;
+      nextBtn.disabled = atEnd;
+      prevBtn.style.opacity = atStart ? '.35' : '1';
+      nextBtn.style.opacity = atEnd ? '.35' : '1';
+      prevBtn.style.pointerEvents = atStart ? 'none' : 'auto';
+      nextBtn.style.pointerEvents = atEnd ? 'none' : 'auto';
+    }
+
+    prevBtn.addEventListener('click', function(){ track.scrollBy({ left: -slideWidth(), behavior:'smooth' }); });
+    nextBtn.addEventListener('click', function(){ track.scrollBy({ left: slideWidth(), behavior:'smooth' }); });
+
+    var scrollTimer;
+    track.addEventListener('scroll', function(){
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(updateEdges, 60);
+    });
+    window.addEventListener('resize', updateEdges);
+    updateEdges();
+
+    if ('IntersectionObserver' in window){
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          var idx = slides.indexOf(entry.target);
+          if (entry.isIntersecting && idx !== -1){
+            stepBtns.forEach(function(b){ b.classList.remove('active'); });
+            stepBtns[idx].classList.add('active');
+          }
+        });
+      }, { root: track, threshold: 0.6 });
+      slides.forEach(function(s){ io.observe(s); });
+    }
+  })();
+
+  // Newsletter Courrier des Sorcières
+  var newsletterForm = document.getElementById('newsletterForm');
+  if (newsletterForm) {
+    newsletterForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      var email = document.getElementById('newsletterEmail').value;
+      var subject = encodeURIComponent("Je souhaite être informé(e) du lancement du Courrier des Sorcières");
+      var body = encodeURIComponent('Merci de m\'ajouter à la liste.\n\nMon email : ' + email);
+      window.location.href = 'mailto:cles.dusort@gmail.com?subject=' + subject + '&body=' + body;
+    });
+  }
 
   // Cookie consent
   var cookieBanner = document.getElementById('cookieBanner');
