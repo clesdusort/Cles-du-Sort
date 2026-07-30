@@ -284,6 +284,22 @@
           </div>
 
           <div class="conditional" id="destinataireBlock">
+            <div id="giftPrestaBlock" style="display:none;">
+              <label style="display:block; font-size:13px; font-weight:700; margin-bottom:8px; color:var(--ink);">Laquelle de tes prestations est un cadeau ? <span class="req">*</span></label>
+              <label class="option-row" id="giftRowMensuelle" style="display:none;">
+                <input type="checkbox" name="entry.655475462" value="Guidance Mensuelle - 34,99e / mois" id="giftMensuelle">
+                <span class="opt-text">Guidance Mensuelle</span>
+              </label>
+              <label class="option-row" id="giftRowPerso" style="display:none;">
+                <input type="checkbox" name="entry.655475462" value="Guidance Personnalisée - 39,99e" id="giftPerso">
+                <span class="opt-text">Guidance Personnalisée</span>
+              </label>
+              <label class="option-row" id="giftRowAnniv" style="display:none;">
+                <input type="checkbox" name="entry.655475462" value="Guidance Anniversaire à (s')offrir -  49,99e" id="giftAnniv">
+                <span class="opt-text">Guidance Anniversaire</span>
+              </label>
+              <div class="error" id="giftErrorMsg" style="display:none; color:#a3221f; font-size:13px; margin:6px 0 4px;">Sélectionne au moins une prestation cadeau.</div>
+            </div>
             <h2 style="margin-top:22px;">Infos du/de la destinataire</h2>
             <div class="grid2">
               <div class="field">
@@ -470,8 +486,53 @@
   var cadeauNon = document.getElementById('cadeauNon');
   var destinataireBlock = document.getElementById('destinataireBlock');
   function toggleDestinataire(show){ destinataireBlock.classList.toggle('open', show); }
-  cadeauOui.addEventListener('change', function(){ toggleDestinataire(true); });
-  cadeauNon.addEventListener('change', function(){ toggleDestinataire(false); });
+  cadeauOui.addEventListener('change', function(){ toggleDestinataire(true); updateGiftBlock(); });
+  cadeauNon.addEventListener('change', function(){ toggleDestinataire(false); updateGiftBlock(); });
+
+  // Sous-question "laquelle de tes prestations est un cadeau ?" — uniquement utile si 2 ou 3 prestations sont cochées
+  var giftPrestaBlock = document.getElementById('giftPrestaBlock');
+  var giftErrorMsg = document.getElementById('giftErrorMsg');
+  var giftRows = {
+    mensuelle: { row: document.getElementById('giftRowMensuelle'), chk: document.getElementById('giftMensuelle') },
+    personnalisee: { row: document.getElementById('giftRowPerso'), chk: document.getElementById('giftPerso') },
+    anniversaire: { row: document.getElementById('giftRowAnniv'), chk: document.getElementById('giftAnniv') }
+  };
+  var prestaChecksByKey = {
+    mensuelle: document.getElementById('prestaMensuelle'),
+    personnalisee: prestaPerso,
+    anniversaire: document.getElementById('prestaAnniv')
+  };
+
+  function updateGiftBlock(){
+    if (!cadeauOui.checked) {
+      giftPrestaBlock.style.display = 'none';
+      giftErrorMsg.style.display = 'none';
+      Object.keys(giftRows).forEach(function(k){ giftRows[k].chk.checked = false; giftRows[k].row.style.display = 'none'; });
+      return;
+    }
+    var checkedKeys = Object.keys(prestaChecksByKey).filter(function(k){ return prestaChecksByKey[k].checked; });
+    if (checkedKeys.length <= 1) {
+      // une seule prestation (ou aucune) : pas d'ambiguïté, on considère l'unique prestation comme le cadeau
+      giftPrestaBlock.style.display = 'none';
+      giftErrorMsg.style.display = 'none';
+      Object.keys(giftRows).forEach(function(k){
+        giftRows[k].chk.checked = (checkedKeys.length === 1 && k === checkedKeys[0]);
+        giftRows[k].row.style.display = 'none';
+      });
+    } else {
+      // 2 ou 3 prestations cochées : on demande laquelle est le cadeau
+      giftPrestaBlock.style.display = 'block';
+      Object.keys(giftRows).forEach(function(k){
+        var isChecked = checkedKeys.indexOf(k) !== -1;
+        giftRows[k].row.style.display = isChecked ? 'flex' : 'none';
+        if (!isChecked) { giftRows[k].chk.checked = false; }
+      });
+    }
+  }
+
+  [document.getElementById('prestaMensuelle'), prestaPerso, document.getElementById('prestaAnniv')].forEach(function(chk){
+    chk.addEventListener('change', updateGiftBlock);
+  });
 
   var form = document.getElementById('csForm');
   var formWrap = document.getElementById('formWrap');
@@ -479,7 +540,17 @@
   var submitBtn = document.getElementById('submitBtn');
   var iframe = document.querySelector('iframe[name="hiddenFrame"]');
   var submitted = false;
-  form.addEventListener('submit', function(){
+  form.addEventListener('submit', function(e){
+    if (giftPrestaBlock.style.display === 'block') {
+      var anyGiftChecked = Object.keys(giftRows).some(function(k){ return giftRows[k].chk.checked; });
+      if (!anyGiftChecked) {
+        e.preventDefault();
+        giftErrorMsg.style.display = 'block';
+        giftPrestaBlock.scrollIntoView({ behavior:'smooth', block:'center' });
+        return;
+      }
+    }
+    giftErrorMsg.style.display = 'none';
     submitBtn.disabled = true;
     submitBtn.textContent = 'Envoi en cours...';
     submitted = true;
