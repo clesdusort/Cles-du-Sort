@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Inscription — Clés du Sort</title>
+<meta name="robots" content="noindex" />
+<!-- Google tag (gtag.js) — ne se déclenche qu'après consentement cookies, voir bandeau en bas de page -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  function cdsEnableAnalytics(){
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=G-WCRB0J95W6';
+    document.head.appendChild(s);
+    gtag('js', new Date());
+    gtag('config', 'G-WCRB0J95W6');
+  }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#272757; --gold:#EFBF04; --gold-deep:#b98f02; --white:#ffffff; --black:#0c0c14;
+    --paper:#faf9fc; --line:#e9e7f2; --sans:'Open Sans', sans-serif; --maxw:1240px; --r-lg:28px; --r-md:18px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0; font-family:var(--sans); color:var(--black); background:var(--white); line-height:1.65; -webkit-font-smoothing:antialiased;}
+  img{max-width:100%; display:block;}
+  a{color:inherit;}
+  h1,h2,h3{margin:0 0 .4em 0; color:var(--ink); font-weight:800; line-height:1.15;}
+  p{margin:0 0 1em 0;}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 32px;}
+  .wrap-narrow{max-width:720px; margin:0 auto; padding:0 32px;}
+
+  .kicker{
+    display:flex; align-items:center; gap:10px; margin-bottom:14px;
+    font-weight:800; letter-spacing:.02em; text-transform:uppercase; color:var(--black); font-size:20px;
+  }
+  .kicker img{width:44px; height:auto;}
+
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    font-family:var(--sans); font-weight:700; font-size:15px;
+    padding:15px 30px; border-radius:999px; text-decoration:none; border:none;
+    cursor:pointer; transition:all .25s ease;
+  }
+  .btn-navy{background:var(--ink); color:var(--white);}
+  .btn-navy:hover{background:#1b1b45; transform:translateY(-2px);}
+  .btn-gold{background:linear-gradient(180deg,#f5d34a,var(--gold)); color:var(--ink); box-shadow:0 8px 20px -8px rgba(239,191,4,.6);}
+  .btn-gold:hover{transform:translateY(-2px); box-shadow:0 12px 24px -8px rgba(239,191,4,.7);}
+  .btn-block{width:100%;}
+  .btn:disabled{opacity:.5; cursor:not-allowed;}
+
+  header.site-nav{position:sticky; top:0; z-index:60; background:var(--white); border-bottom:1px solid var(--line);}
+  .nav-inner{max-width:var(--maxw); margin:0 auto; padding:16px 32px; display:flex; align-items:center; justify-content:space-between; gap:20px;}
+  .nav-inner > a:first-child{flex-shrink:0;}
+  .logo-img{height:44px; width:auto;}
+  nav.links{display:flex; align-items:center; gap:40px;}
+  nav.links a{
+    font-size:13px; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
+    text-decoration:none; color:var(--ink); padding-top:10px; border-top:1.5px solid var(--line);
+    display:inline-block; transition:border-color .2s ease, color .2s ease;
+  }
+  nav.links a:hover{border-color:var(--gold); color:var(--gold-deep);}
+  .nav-cta{
+    font-size:12px; font-weight:800; letter-spacing:.04em; text-transform:uppercase;
+    color:var(--gold-deep); text-align:center; line-height:1.5; text-decoration:none;
+    border-top:1.5px solid var(--line); border-bottom:1.5px solid var(--line); padding:8px 4px;
+    margin-left:auto;
+  }
+  .burger{display:none; background:none; border:none; cursor:pointer; padding:6px; flex-shrink:0;}
+  .burger span{display:block; width:24px; height:2px; background:var(--ink); margin:5px 0; border-radius:2px;}
+  @media (max-width:900px){
+    .nav-inner{padding:14px 20px;}
+    nav.links{
+      position:fixed; inset:70px 0 0 0; background:var(--white);
+      flex-direction:column; align-items:flex-start; padding:30px 32px; gap:22px;
+      transform:translateY(-115%); transition:transform .3s ease; border-top:1px solid var(--line);
+    }
+    nav.links.open{transform:translateY(0);}
+    nav.links a{font-size:17px;}
+    nav.links .nav-cta{margin-left:0; margin-top:10px; width:100%; text-align:left; padding-left:0; padding-right:0;}
+    .burger{display:block;}
+  }
+
+  .form-hero{padding:44px 0 10px; text-align:center;}
+  .form-hero p{color:#444; font-size:15px; max-width:480px; margin:0 auto;}
+
+  main{padding:30px 0 90px;}
+  .card{background:var(--white); border:1px solid var(--line); border-radius:var(--r-lg); padding:32px; margin-bottom:20px;}
+  .card h2{font-size:17px; margin:0 0 18px; padding-bottom:12px; border-bottom:2px solid var(--gold); color:var(--ink);}
+  .field{margin-bottom:18px;}
+  .field label{display:block; font-size:13px; font-weight:700; letter-spacing:.02em; margin-bottom:6px; color:var(--ink);}
+  .field .req{color:var(--gold-deep);}
+  .field input[type="text"], .field input[type="email"], .field input[type="date"], .field textarea{
+    width:100%; padding:12px 14px; border-radius:10px; border:1.5px solid var(--line);
+    font-family:var(--sans); font-size:15px; background:var(--white);
+  }
+  .field input:focus, .field textarea:focus{outline:2px solid var(--gold); border-color:var(--gold);}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media (max-width:600px){ .grid2{grid-template-columns:1fr;} }
+
+  .option-row{
+    display:flex; align-items:flex-start; gap:12px; padding:12px 14px; border:1.5px solid var(--line);
+    border-radius:12px; margin-bottom:10px; cursor:pointer; transition:border-color .2s ease, background .2s ease;
+  }
+  .option-row:hover{border-color:var(--gold);}
+  .option-row input{margin-top:3px; flex-shrink:0; width:18px; height:18px; accent-color:var(--gold-deep);}
+  .option-row .opt-text{font-size:14.5px;}
+  .option-row .opt-price{display:block; font-weight:700; color:var(--ink); margin-bottom:2px;}
+
+  .conditional{max-height:0; overflow:hidden; opacity:0; transition:max-height .35s ease, opacity .35s ease;}
+  .conditional.open{max-height:2000px; opacity:1;}
+
+  .radio-row{display:flex; gap:14px; margin-bottom:8px;}
+  .radio-pill{
+    flex:1; display:flex; align-items:center; justify-content:center; gap:8px;
+    padding:12px; border:1.5px solid var(--line); border-radius:999px; cursor:pointer; font-size:14.5px; font-weight:700;
+  }
+  .radio-pill input{accent-color:var(--gold-deep);}
+
+  .consent-row{display:flex; align-items:flex-start; gap:10px; font-size:13.5px; color:#333;}
+  .consent-row input{margin-top:3px; width:18px; height:18px; flex-shrink:0; accent-color:var(--gold-deep);}
+
+  .status-msg{display:none; text-align:center; padding:60px 0;}
+  .status-msg.visible{display:block;}
+  .status-msg h2{font-size:26px; margin-bottom:12px;}
+  .status-msg p{color:#444; max-width:440px; margin:0 auto 24px;}
+
+  footer{background:var(--white); border-top:1px dashed #333; padding:56px 0 30px;}
+  .footer-grid{display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:40px; margin-bottom:44px;}
+  @media (max-width:760px){ .footer-grid{grid-template-columns:1fr; gap:30px;} }
+  footer h4{font-size:12.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink); margin-bottom:16px; font-weight:800;}
+  footer ul{list-style:none; padding:0; margin:0;}
+  footer li{margin-bottom:11px;}
+  footer a{text-decoration:none; font-size:14.5px; color:#333;}
+  footer a:hover{color:var(--gold-deep);}
+  footer .foot-logo{height:40px; margin-bottom:14px;}
+  footer .foot-tagline{max-width:280px; font-size:14px; color:#444;}
+  .foot-social{display:flex; align-items:center; gap:10px; margin-top:6px;}
+  .foot-social img{height:26px;}
+  .footer-bottom{
+    border-top:1px solid var(--line); padding-top:22px;
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
+    font-size:13px; color:#777;
+  }
+
+  .cookie-banner{
+    position:fixed; left:0; right:0; bottom:0; z-index:9000;
+    background:var(--ink); color:var(--white);
+    padding:20px 26px; box-shadow:0 -10px 30px rgba(0,0,0,.25);
+    display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap;
+    transform:translateY(110%); transition:transform .4s ease;
+  }
+  .cookie-banner.visible{transform:translateY(0);}
+  .cookie-banner p{margin:0; font-size:13.5px; color:#e2e1ef; max-width:640px; line-height:1.55;}
+  .cookie-banner a{color:var(--gold); text-decoration:underline;}
+  .cookie-actions{display:flex; gap:10px; flex-wrap:wrap; flex-shrink:0;}
+  .btn-ghost-white{background:transparent; color:var(--white); border:1.5px solid rgba(255,255,255,.5);}
+  .btn-ghost-white:hover{background:rgba(255,255,255,.1); border-color:var(--white);}
+  .cookie-btn{padding:11px 22px; font-size:13.5px;}
+  #cookieManageLink{cursor:pointer;}
+  @media (max-width:640px){
+    .cookie-banner{padding:18px 18px 20px; flex-direction:column; align-items:stretch; text-align:left;}
+    .cookie-actions{justify-content:stretch;}
+    .cookie-actions .btn{flex:1;}
+  }
+  ::selection{background:var(--gold); color:var(--ink);}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <div class="nav-inner">
+    <a href="index.html"><img class="logo-img" src="assets/logo-noir-baseline.png" alt="Clés du Sort"></a>
+    <nav class="links" id="navLinks">
+      <a href="index.html#concept">Le concept</a>
+      <a href="index.html#correspondances">Les correspondances</a>
+      <a href="inscription.html" class="nav-cta">Rejoindre le club</a>
+    </nav>
+    <button class="burger" id="burgerBtn" aria-label="Ouvrir le menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<section class="form-hero" id="formHeroSection">
+  <div class="wrap-narrow">
+    <div class="kicker" style="justify-content:center;" id="formHeroKicker"><img src="assets/picto-simple.png" alt="">Prépare ta lettre</div>
+    <p id="presetBanner" style="display:none; font-weight:700; color:var(--gold-deep); margin-bottom:6px;">✨ Sélection reprise depuis l'accueil — modifie-la si besoin ci-dessous.</p>
+    <p id="formHeroText">Remplis ce formulaire tranquillement, ça prend deux minutes. Tes données ne servent qu'à préparer et t'envoyer ta lettre, rien d'autre.</p>
+  </div>
+</section>
+
+<main>
+  <div class="wrap-narrow">
+
+    <div id="formWrap">
+      <form id="csForm" action="https://docs.google.com/forms/u/0/d/e/1FAIpQLScVAVS1yj87m--vKkaA-FPnQLXbD-qADYDxHCh6r5WWO_ed4Q/formResponse" method="POST" target="hiddenFrame">
+
+        <div class="card">
+          <h2>Tes informations</h2>
+          <div class="grid2">
+            <div class="field">
+              <label>Prénom <span class="req">*</span></label>
+              <input type="text" name="entry.998307135" required>
+            </div>
+            <div class="field">
+              <label>Nom <span class="req">*</span></label>
+              <input type="text" name="entry.1663086099" required>
+            </div>
+          </div>
+          <div class="field">
+            <label>Date de naissance <span class="req">*</span></label>
+            <input type="date" id="dobPicker" required>
+            <input type="hidden" name="entry.334740523_year" id="dob_year">
+            <input type="hidden" name="entry.334740523_month" id="dob_month">
+            <input type="hidden" name="entry.334740523_day" id="dob_day">
+          </div>
+          <div class="field">
+            <label>Email <span class="req">*</span></label>
+            <input type="email" name="entry.662204075" id="emailField" required>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Ton adresse postale</h2>
+          <div class="grid2">
+            <div class="field">
+              <label>Numéro de rue <span class="req">*</span></label>
+              <input type="text" name="entry.359196432" required>
+            </div>
+            <div class="field">
+              <label>Nom de la rue <span class="req">*</span></label>
+              <input type="text" name="entry.1696442176" required>
+            </div>
+          </div>
+          <div class="grid2">
+            <div class="field">
+              <label>Code postal <span class="req">*</span></label>
+              <input type="text" name="entry.997541389" required>
+            </div>
+            <div class="field">
+              <label>Ville <span class="req">*</span></label>
+              <input type="text" name="entry.301216716" required>
+            </div>
+          </div>
+          <div class="field">
+            <label>Pays <span class="req">*</span></label>
+            <input type="text" name="entry.1568539585" required>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Prestation(s) souhaitée(s) <span class="req">*</span></h2>
+          <label class="option-row">
+            <input type="checkbox" name="entry.423792434" value="Guidance Mensuelle - 34,99e / mois" id="prestaMensuelle" class="presta-check">
+            <span class="opt-text"><span class="opt-price">Guidance Mensuelle</span>34,99 € / mois</span>
+          </label>
+          <label class="option-row">
+            <input type="checkbox" name="entry.423792434" value="Guidance Personnalisée - 39,99e" id="prestaPerso" class="presta-check">
+            <span class="opt-text"><span class="opt-price">Guidance Personnalisée</span>39,99 €</span>
+          </label>
+          <label class="option-row">
+            <input type="checkbox" name="entry.423792434" value="Guidance Anniversaire à (s')offrir -  49,99e" id="prestaAnniv" class="presta-check">
+            <span class="opt-text"><span class="opt-price">Guidance Anniversaire</span>49,99 € — à (s')offrir</span>
+          </label>
+
+          <div class="conditional" id="questionBlock">
+            <div class="field" style="margin-top:10px;">
+              <label>Quelle est ta question, pour la Guidance Personnalisée ?</label>
+              <textarea name="entry.9460814" rows="3"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>S'agit-il d'un cadeau pour quelqu'un d'autre ? <span class="req">*</span></h2>
+          <div class="radio-row">
+            <label class="radio-pill"><input type="radio" name="entry.987211269" value="Oui" id="cadeauOui" required> Oui</label>
+            <label class="radio-pill"><input type="radio" name="entry.987211269" value="Non" id="cadeauNon"> Non</label>
+          </div>
+
+          <div class="conditional" id="destinataireBlock">
+            <h2 style="margin-top:22px;">Infos du/de la destinataire</h2>
+            <div class="grid2">
+              <div class="field">
+                <label>Prénom du destinataire</label>
+                <input type="text" name="entry.1286062923" id="destPrenom">
+              </div>
+              <div class="field">
+                <label>Nom du destinataire</label>
+                <input type="text" name="entry.1041228807" id="destNom">
+              </div>
+            </div>
+            <div class="field">
+              <label>Email du destinataire</label>
+              <input type="email" name="entry.799591536" id="destEmail">
+            </div>
+            <div class="field">
+              <label>Date de naissance du destinataire</label>
+              <input type="date" id="destDobPicker">
+              <input type="hidden" name="entry.829338521_year" id="destDob_year">
+              <input type="hidden" name="entry.829338521_month" id="destDob_month">
+              <input type="hidden" name="entry.829338521_day" id="destDob_day">
+            </div>
+            <div class="grid2">
+              <div class="field">
+                <label>Numéro de rue du destinataire</label>
+                <input type="text" name="entry.1552971421" id="destNum">
+              </div>
+              <div class="field">
+                <label>Nom de rue du destinataire</label>
+                <input type="text" name="entry.308152362" id="destRue">
+              </div>
+            </div>
+            <div class="grid2">
+              <div class="field">
+                <label>Code postal du destinataire</label>
+                <input type="text" name="entry.1150309182" id="destCP">
+              </div>
+              <div class="field">
+                <label>Ville du destinataire</label>
+                <input type="text" name="entry.463225868" id="destVille">
+              </div>
+            </div>
+            <div class="field">
+              <label>Pays du destinataire</label>
+              <input type="text" name="entry.17565481" id="destPays">
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <label class="consent-row">
+            <input type="checkbox" name="entry.1276620580" value="J'accepte que mes données soient utilisées uniquement pour l'envoi de ton courrier, sans partage à des tiers." required>
+            <span>J'accepte que mes données soient utilisées uniquement pour l'envoi de ton courrier, sans partage à des tiers. <span class="req">*</span></span>
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-gold btn-block" id="submitBtn">Envoyer mes informations</button>
+      </form>
+    </div>
+
+    <div class="status-msg" id="statusMsg">
+      <h2>C'est enregistré ✨</h2>
+      <p>Merci ! Tes informations sont bien arrivées. Il ne reste plus qu'à valider le règlement pour lancer la préparation de ta lettre.</p>
+      <p style="font-size:13px; color:#777; max-width:420px; margin:-10px auto 24px;">Besoin de modifier une information ? Écris-nous à <a href="mailto:cles.dusort@gmail.com" style="color:var(--gold-deep);">cles.dusort@gmail.com</a>.</p>
+      <a href="paiement.html" class="btn btn-gold" id="goToPaymentBtn">Procéder au règlement de ta commande</a>
+      <div style="margin-top:14px;"><a href="index.html" style="font-size:13.5px; color:#777; text-decoration:underline;">Retour au site</a></div>
+    </div>
+
+  </div>
+</main>
+
+<iframe name="hiddenFrame" style="display:none;"></iframe>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <img class="foot-logo" src="assets/logo-noir-baseline.png" alt="Clés du Sort">
+        <p class="foot-tagline">Correspondance / snail mail ésotérique par courrier postal, entièrement fait à la main.</p>
+      </div>
+      <div>
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="index.html#concept">Le concept</a></li>
+          <li><a href="index.html#correspondances">Correspondances</a></li>
+          <li><a href="mentions-legales.html">Mentions légales</a></li>
+          <li><a href="mentions-legales.html#cgv">CGV</a></li>
+          <li><a href="#" id="cookieManageLink">Gérer mes cookies</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:cles.dusort@gmail.com">cles.dusort@gmail.com</a></li>
+        </ul>
+        <p style="font-weight:700; font-size:14.5px; margin-bottom:8px;">Clesdusort :</p>
+        <div class="foot-social"><a href="https://linktr.ee/clesdusort" target="_blank" rel="noopener"><img src="assets/social-bleu.png" alt="Instagram et TikTok"></a></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Clés du Sort</span>
+      <span>Micro-entreprise &middot; Oracle de Belline</span>
+    </div>
+  </div>
+</footer>
+
+<div class="cookie-banner" id="cookieBanner">
+  <p>Ce site utilise Google Analytics pour comprendre comment tu navigues, uniquement si tu l'acceptes. Aucune donnée n'est vendue ni partagée à des fins publicitaires. Plus d'infos dans nos <a href="mentions-legales.html">mentions légales</a>.</p>
+  <div class="cookie-actions">
+    <button class="btn btn-ghost-white cookie-btn" id="cookieRefuse">Refuser</button>
+    <button class="btn btn-gold cookie-btn" id="cookieAccept">Accepter</button>
+  </div>
+</div>
+
+<script>
+  var burger = document.getElementById('burgerBtn');
+  var links = document.getElementById('navLinks');
+  burger.addEventListener('click', function(){ links.classList.toggle('open'); });
+  links.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', function(){ links.classList.remove('open'); }); });
+
+  var cookieBanner = document.getElementById('cookieBanner');
+  var cookieAccept = document.getElementById('cookieAccept');
+  var cookieRefuse = document.getElementById('cookieRefuse');
+  var consent = localStorage.getItem('cds_cookie_consent');
+  if (consent === 'accepted') {
+    cdsEnableAnalytics();
+  } else if (consent !== 'refused') {
+    cookieBanner.classList.add('visible');
+  }
+  cookieAccept.addEventListener('click', function(){
+    localStorage.setItem('cds_cookie_consent', 'accepted');
+    cdsEnableAnalytics();
+    cookieBanner.classList.remove('visible');
+  });
+  cookieRefuse.addEventListener('click', function(){
+    localStorage.setItem('cds_cookie_consent', 'refused');
+    cookieBanner.classList.remove('visible');
+  });
+  document.getElementById('cookieManageLink').addEventListener('click', function(e){
+    e.preventDefault();
+    cookieBanner.classList.add('visible');
+  });
+
+  function wireDatePicker(pickerId, yearId, monthId, dayId){
+    var picker = document.getElementById(pickerId);
+    picker.addEventListener('change', function(){
+      if(!picker.value) return;
+      var parts = picker.value.split('-');
+      document.getElementById(yearId).value = parts[0];
+      document.getElementById(monthId).value = parseInt(parts[1], 10);
+      document.getElementById(dayId).value = parseInt(parts[2], 10);
+    });
+  }
+  wireDatePicker('dobPicker', 'dob_year', 'dob_month', 'dob_day');
+  wireDatePicker('destDobPicker', 'destDob_year', 'destDob_month', 'destDob_day');
+
+  var prestaPerso = document.getElementById('prestaPerso');
+  var questionBlock = document.getElementById('questionBlock');
+  prestaPerso.addEventListener('change', function(){
+    questionBlock.classList.toggle('open', prestaPerso.checked);
+  });
+
+  // Reprise de la sélection depuis l'accueil : préremplir, sans verrouiller (on peut ajouter d'autres prestations)
+  (function(){
+    var params = new URLSearchParams(window.location.search);
+    var produit = params.get('produit');
+    var email = params.get('email');
+    var emailField = document.getElementById('emailField');
+    if (email && emailField) { emailField.value = email; }
+    if (produit) {
+      var presetBanner = document.getElementById('presetBanner');
+      if (presetBanner) { presetBanner.style.display = 'block'; }
+    }
+
+    var map = { mensuelle: 'prestaMensuelle', personnalisee: 'prestaPerso', anniversaire: 'prestaAnniv' };
+    if (produit && map[produit]) {
+      var target = document.getElementById(map[produit]);
+      target.checked = true;
+      if (target === prestaPerso) { questionBlock.classList.add('open'); }
+    }
+  })();
+
+  var cadeauOui = document.getElementById('cadeauOui');
+  var cadeauNon = document.getElementById('cadeauNon');
+  var destinataireBlock = document.getElementById('destinataireBlock');
+  function toggleDestinataire(show){ destinataireBlock.classList.toggle('open', show); }
+  cadeauOui.addEventListener('change', function(){ toggleDestinataire(true); });
+  cadeauNon.addEventListener('change', function(){ toggleDestinataire(false); });
+
+  var form = document.getElementById('csForm');
+  var formWrap = document.getElementById('formWrap');
+  var statusMsg = document.getElementById('statusMsg');
+  var submitBtn = document.getElementById('submitBtn');
+  var iframe = document.querySelector('iframe[name="hiddenFrame"]');
+  var submitted = false;
+  form.addEventListener('submit', function(){
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Envoi en cours...';
+    submitted = true;
+  });
+  iframe.addEventListener('load', function(){
+    if (submitted) {
+      formWrap.style.display = 'none';
+      statusMsg.classList.add('visible');
+      window.scrollTo({top:0, behavior:'smooth'});
+
+      var presetBannerEl = document.getElementById('presetBanner');
+      if (presetBannerEl) { presetBannerEl.style.display = 'none'; }
+      var formHeroSection = document.getElementById('formHeroSection');
+      if (formHeroSection) { formHeroSection.style.display = 'none'; }
+
+      var chosen = [];
+      if (document.getElementById('prestaMensuelle').checked) { chosen.push('mensuelle'); }
+      if (document.getElementById('prestaPerso').checked) { chosen.push('personnalisee'); }
+      if (document.getElementById('prestaAnniv').checked) { chosen.push('anniversaire'); }
+      var emailValue = document.getElementById('emailField').value;
+      var payParams = new URLSearchParams();
+      if (chosen.length) { payParams.set('produits', chosen.join(',')); }
+      if (emailValue) { payParams.set('email', emailValue); }
+      var goToPaymentBtn = document.getElementById('goToPaymentBtn');
+      goToPaymentBtn.href = 'paiement.html' + (payParams.toString() ? '?' + payParams.toString() : '');
+    }
+  });
+</script>
+
+</body>
+</html>

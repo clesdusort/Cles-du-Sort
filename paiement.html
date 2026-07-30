@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Paiement — Clés du Sort</title>
+<meta name="robots" content="noindex" />
+<!-- Google tag (gtag.js) — ne se déclenche qu'après consentement cookies, voir bandeau en bas de page -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  function cdsEnableAnalytics(){
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=G-WCRB0J95W6';
+    document.head.appendChild(s);
+    gtag('js', new Date());
+    gtag('config', 'G-WCRB0J95W6');
+  }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#272757; --gold:#EFBF04; --gold-deep:#b98f02; --white:#ffffff; --black:#0c0c14;
+    --paper:#faf9fc; --line:#e9e7f2; --sans:'Open Sans', sans-serif; --maxw:1240px; --r-lg:28px; --r-md:18px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0; font-family:var(--sans); color:var(--black); background:var(--white); line-height:1.65; -webkit-font-smoothing:antialiased;}
+  img{max-width:100%; display:block;}
+  a{color:inherit;}
+  h1,h2,h3{margin:0 0 .4em 0; color:var(--ink); font-weight:800; line-height:1.15;}
+  p{margin:0 0 1em 0;}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 32px;}
+  .wrap-narrow{max-width:520px; margin:0 auto; padding:0 32px;}
+
+  .kicker{
+    display:flex; align-items:center; gap:10px; margin-bottom:14px;
+    font-weight:800; letter-spacing:.02em; text-transform:uppercase; color:var(--black); font-size:20px;
+  }
+  .kicker img{width:44px; height:auto;}
+
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    font-family:var(--sans); font-weight:700; font-size:15px;
+    padding:15px 30px; border-radius:999px; text-decoration:none; border:none;
+    cursor:pointer; transition:all .25s ease;
+  }
+  .btn-navy{background:var(--ink); color:var(--white);}
+  .btn-navy:hover{background:#1b1b45; transform:translateY(-2px);}
+  .btn-gold{background:linear-gradient(180deg,#f5d34a,var(--gold)); color:var(--ink); box-shadow:0 8px 20px -8px rgba(239,191,4,.6);}
+  .btn-gold:hover{transform:translateY(-2px); box-shadow:0 12px 24px -8px rgba(239,191,4,.7);}
+  .btn-block{width:100%;}
+  .btn:disabled{opacity:.5; cursor:not-allowed;}
+
+  header.site-nav{position:sticky; top:0; z-index:60; background:var(--white); border-bottom:1px solid var(--line);}
+  .nav-inner{max-width:var(--maxw); margin:0 auto; padding:16px 32px; display:flex; align-items:center; justify-content:space-between; gap:20px;}
+  .nav-inner > a:first-child{flex-shrink:0;}
+  .logo-img{height:44px; width:auto;}
+  nav.links{display:flex; align-items:center; gap:40px;}
+  nav.links a{
+    font-size:13px; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
+    text-decoration:none; color:var(--ink); padding-top:10px; border-top:1.5px solid var(--line);
+    display:inline-block; transition:border-color .2s ease, color .2s ease;
+  }
+  nav.links a:hover{border-color:var(--gold); color:var(--gold-deep);}
+  .nav-cta{
+    font-size:12px; font-weight:800; letter-spacing:.04em; text-transform:uppercase;
+    color:var(--gold-deep); text-align:center; line-height:1.5; text-decoration:none;
+    border-top:1.5px solid var(--line); border-bottom:1.5px solid var(--line); padding:8px 4px;
+    margin-left:auto;
+  }
+  .burger{display:none; background:none; border:none; cursor:pointer; padding:6px; flex-shrink:0;}
+  .burger span{display:block; width:24px; height:2px; background:var(--ink); margin:5px 0; border-radius:2px;}
+  @media (max-width:900px){
+    .nav-inner{padding:14px 20px;}
+    nav.links{
+      position:fixed; inset:70px 0 0 0; background:var(--white);
+      flex-direction:column; align-items:flex-start; padding:30px 32px; gap:22px;
+      transform:translateY(-115%); transition:transform .3s ease; border-top:1px solid var(--line);
+    }
+    nav.links.open{transform:translateY(0);}
+    nav.links a{font-size:17px;}
+    nav.links .nav-cta{margin-left:0; margin-top:10px; width:100%; text-align:left; padding-left:0; padding-right:0;}
+    .burger{display:block;}
+  }
+
+  .form-hero{padding:44px 0 10px; text-align:center;}
+  .form-hero p{color:#444; font-size:15px; max-width:440px; margin:0 auto;}
+
+  main{padding:30px 0 90px;}
+  .card{background:var(--white); border:1px solid var(--line); border-radius:var(--r-lg); padding:32px; margin-bottom:20px;}
+  .field{margin-bottom:16px;}
+  .field label{display:block; font-size:13px; font-weight:700; margin-bottom:6px; color:var(--ink);}
+  .field input, .field select{
+    width:100%; padding:12px 14px; border-radius:10px; border:1.5px solid var(--line); font-size:15px;
+    font-family:var(--sans);
+  }
+  .field input:focus, .field select:focus{outline:2px solid var(--gold); border-color:var(--gold);}
+  .price{ font-size:26px; font-weight:800; color:var(--ink); text-align:center; margin:10px 0 24px; }
+  .pay-option-row{
+    display:flex; align-items:flex-start; gap:12px; padding:12px 14px; border:1.5px solid var(--line);
+    border-radius:12px; margin-bottom:10px; cursor:pointer; transition:border-color .2s ease;
+  }
+  .pay-option-row:hover{border-color:var(--gold);}
+  .pay-option-row input{margin-top:3px; flex-shrink:0; width:18px; height:18px; accent-color:var(--gold-deep);}
+  .pay-option-row .opt-text{font-size:14.5px;}
+  .pay-option-row .opt-price{display:block; font-weight:700; color:var(--ink); margin-bottom:2px;}
+
+  #iframeWrap{ display:none; margin-top:20px; }
+  #stancerFrame{ width:100%; height:520px; border:none; border-radius:16px; background:#fff; }
+
+  .error{ color:#a3221f; font-size:13.5px; margin-top:10px; display:none; }
+  .loading{ text-align:center; color:#666; font-size:14px; padding:20px 0; display:none; }
+  .secure-note{ text-align:center; font-size:13px; color:#666; margin-top:16px; }
+
+  footer{background:var(--white); border-top:1px dashed #333; padding:56px 0 30px;}
+  .footer-grid{display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:40px; margin-bottom:44px;}
+  @media (max-width:760px){ .footer-grid{grid-template-columns:1fr; gap:30px;} }
+  footer h4{font-size:12.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink); margin-bottom:16px; font-weight:800;}
+  footer ul{list-style:none; padding:0; margin:0;}
+  footer li{margin-bottom:11px;}
+  footer a{text-decoration:none; font-size:14.5px; color:#333;}
+  footer a:hover{color:var(--gold-deep);}
+  footer .foot-logo{height:40px; margin-bottom:14px;}
+  footer .foot-tagline{max-width:280px; font-size:14px; color:#444;}
+  .foot-social{display:flex; align-items:center; gap:10px; margin-top:6px;}
+  .foot-social img{height:26px;}
+  .footer-bottom{
+    border-top:1px solid var(--line); padding-top:22px;
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
+    font-size:13px; color:#777;
+  }
+
+  .cookie-banner{
+    position:fixed; left:0; right:0; bottom:0; z-index:9000;
+    background:var(--ink); color:var(--white);
+    padding:20px 26px; box-shadow:0 -10px 30px rgba(0,0,0,.25);
+    display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap;
+    transform:translateY(110%); transition:transform .4s ease;
+  }
+  .cookie-banner.visible{transform:translateY(0);}
+  .cookie-banner p{margin:0; font-size:13.5px; color:#e2e1ef; max-width:640px; line-height:1.55;}
+  .cookie-banner a{color:var(--gold); text-decoration:underline;}
+  .cookie-actions{display:flex; gap:10px; flex-wrap:wrap; flex-shrink:0;}
+  .btn-ghost-white{background:transparent; color:var(--white); border:1.5px solid rgba(255,255,255,.5);}
+  .btn-ghost-white:hover{background:rgba(255,255,255,.1); border-color:var(--white);}
+  .cookie-btn{padding:11px 22px; font-size:13.5px;}
+  #cookieManageLink{cursor:pointer;}
+  @media (max-width:640px){
+    .cookie-banner{padding:18px 18px 20px; flex-direction:column; align-items:stretch; text-align:left;}
+    .cookie-actions{justify-content:stretch;}
+    .cookie-actions .btn{flex:1;}
+  }
+  ::selection{background:var(--gold); color:var(--ink);}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <div class="nav-inner">
+    <a href="index.html"><img class="logo-img" src="assets/logo-noir-baseline.png" alt="Clés du Sort"></a>
+    <nav class="links" id="navLinks">
+      <a href="index.html#concept">Le concept</a>
+      <a href="index.html#correspondances">Les correspondances</a>
+      <a href="inscription.html" class="nav-cta">Rejoindre le club</a>
+    </nav>
+    <button class="burger" id="burgerBtn" aria-label="Ouvrir le menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<section class="form-hero">
+  <div class="wrap-narrow">
+    <div class="kicker" style="justify-content:center;"><img src="assets/picto-simple.png" alt="">Régler ta commande</div>
+    <p>Dernière étape : le règlement, en toute sécurité via Stancer — nous ne voyons jamais tes coordonnées bancaires.</p>
+  </div>
+</section>
+
+<main>
+  <div class="wrap-narrow">
+
+    <div class="card" id="formCard">
+      <div class="field">
+        <label>Prestation(s) — tu peux en choisir plusieurs</label>
+        <label class="pay-option-row">
+          <input type="checkbox" id="payMensuelle" data-product="mensuelle" data-price="34.99" class="pay-check">
+          <span class="opt-text"><span class="opt-price">Guidance Mensuelle</span>34,99 € / mois</span>
+        </label>
+        <label class="pay-option-row">
+          <input type="checkbox" id="payPersonnalisee" data-product="personnalisee" data-price="39.99" class="pay-check">
+          <span class="opt-text"><span class="opt-price">Guidance Personnalisée</span>39,99 €</span>
+        </label>
+        <label class="pay-option-row">
+          <input type="checkbox" id="payAnniversaire" data-product="anniversaire" data-price="49.99" class="pay-check">
+          <span class="opt-text"><span class="opt-price">Guidance Anniversaire</span>49,99 €</span>
+        </label>
+      </div>
+
+      <div id="recapBox" style="background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin-bottom:18px; display:none;">
+        <p id="recapTitle" style="font-weight:800; color:var(--ink); margin-bottom:8px; font-size:14.5px;">Tu commandes :</p>
+        <ul id="recapList" style="margin:0; padding-left:18px; font-size:13.5px; color:#444; line-height:1.7;"></ul>
+      </div>
+
+      <div class="field">
+        <label>Ton email</label>
+        <input type="email" id="emailInput" placeholder="toi@exemple.com" required>
+      </div>
+      <div class="price" id="priceDisplay">Sélectionne au moins une prestation</div>
+      <button class="btn btn-gold btn-block" id="payBtn" disabled>Procéder au paiement</button>
+      <div class="error" id="errorMsg"></div>
+      <div class="loading" id="loadingMsg">Préparation du paiement...</div>
+      <p class="secure-note">Tes informations (adresse, date de naissance...) ont déjà été enregistrées via le formulaire. Il ne reste que le règlement.</p>
+    </div>
+
+    <div id="iframeWrap">
+      <iframe id="stancerFrame" allow="payment"></iframe>
+    </div>
+
+    <div class="card" id="successCard" style="display:none; text-align:center;">
+      <h2 style="font-size:22px;">Paiement confirmé ✨</h2>
+      <p>Merci ! Ta commande est validée, je m'attelle à la préparation de ta lettre avec soin.</p>
+      <p style="font-size:13px; color:#777;">Besoin de modifier une information ? Écris-nous à <a href="mailto:cles.dusort@gmail.com" style="color:var(--gold-deep);">cles.dusort@gmail.com</a>.</p>
+      <a href="index.html" class="btn btn-navy">Retour au site</a>
+    </div>
+
+  </div>
+</main>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <img class="foot-logo" src="assets/logo-noir-baseline.png" alt="Clés du Sort">
+        <p class="foot-tagline">Correspondance / snail mail ésotérique par courrier postal, entièrement fait à la main.</p>
+      </div>
+      <div>
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="index.html#concept">Le concept</a></li>
+          <li><a href="index.html#correspondances">Correspondances</a></li>
+          <li><a href="mentions-legales.html">Mentions légales</a></li>
+          <li><a href="mentions-legales.html#cgv">CGV</a></li>
+          <li><a href="#" id="cookieManageLink">Gérer mes cookies</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:cles.dusort@gmail.com">cles.dusort@gmail.com</a></li>
+        </ul>
+        <p style="font-weight:700; font-size:14.5px; margin-bottom:8px;">Clesdusort :</p>
+        <div class="foot-social"><a href="https://linktr.ee/clesdusort" target="_blank" rel="noopener"><img src="assets/social-bleu.png" alt="Instagram et TikTok"></a></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Clés du Sort</span>
+      <span>Micro-entreprise &middot; Oracle de Belline</span>
+    </div>
+  </div>
+</footer>
+
+<div class="cookie-banner" id="cookieBanner">
+  <p>Ce site utilise Google Analytics pour comprendre comment tu navigues, uniquement si tu l'acceptes. Aucune donnée n'est vendue ni partagée à des fins publicitaires. Plus d'infos dans nos <a href="mentions-legales.html">mentions légales</a>.</p>
+  <div class="cookie-actions">
+    <button class="btn btn-ghost-white cookie-btn" id="cookieRefuse">Refuser</button>
+    <button class="btn btn-gold cookie-btn" id="cookieAccept">Accepter</button>
+  </div>
+</div>
+
+<script>
+  var burger = document.getElementById('burgerBtn');
+  var links = document.getElementById('navLinks');
+  burger.addEventListener('click', function(){ links.classList.toggle('open'); });
+  links.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', function(){ links.classList.remove('open'); }); });
+
+  var cookieBanner = document.getElementById('cookieBanner');
+  var cookieAccept = document.getElementById('cookieAccept');
+  var cookieRefuse = document.getElementById('cookieRefuse');
+  var consent = localStorage.getItem('cds_cookie_consent');
+  if (consent === 'accepted') {
+    cdsEnableAnalytics();
+  } else if (consent !== 'refused') {
+    cookieBanner.classList.add('visible');
+  }
+  cookieAccept.addEventListener('click', function(){
+    localStorage.setItem('cds_cookie_consent', 'accepted');
+    cdsEnableAnalytics();
+    cookieBanner.classList.remove('visible');
+  });
+  cookieRefuse.addEventListener('click', function(){
+    localStorage.setItem('cds_cookie_consent', 'refused');
+    cookieBanner.classList.remove('visible');
+  });
+  document.getElementById('cookieManageLink').addEventListener('click', function(e){
+    e.preventDefault();
+    cookieBanner.classList.add('visible');
+  });
+
+  // ⚠️ Remplace cette URL par celle de ta fonction déployée sur Vercel (voir README de l'intégration Stancer)
+  // ⚠️ IMPORTANT : cette fonction doit maintenant accepter plusieurs prestations (voir "produits" ci-dessous)
+  // et calculer elle-même le montant total à facturer.
+  const BACKEND_URL = 'https://TON-PROJET.vercel.app/api/create-payment';
+
+  const RECAP = {
+    mensuelle: {
+      title: 'Guidance Mensuelle',
+      price: 34.99,
+      priceLabel: '34,99 € / mois',
+      items: ['Tirage de 3 cartes (Oracle de Belline)', 'Lettre fabriquée à la main, illustration originale', "Enfumage à l'encens et scellage à la cire", 'Un thé à déguster, et quelques surprises', 'Sans engagement, résiliable à tout moment']
+    },
+    personnalisee: {
+      title: 'Guidance Personnalisée',
+      price: 39.99,
+      priceLabel: '39,99 €',
+      items: ['Tirage de 3 cartes construit autour de ta question', 'Lettre fabriquée à la main, illustration originale', "Enfumage à l'encens et scellage à la cire", 'Un thé à déguster, et quelques surprises', 'Environ 2 semaines de préparation']
+    },
+    anniversaire: {
+      title: 'Guidance Anniversaire',
+      price: 49.99,
+      priceLabel: '49,99 €',
+      items: ['Tirage de 8 cartes basé sur ta date de naissance', 'Synthèse des 4 trimestres à venir', "Lettre fabriquée à la main, illustration originale, encens et cire", 'Environ 2 semaines de préparation']
+    }
+  };
+
+  const payChecks = Array.from(document.querySelectorAll('.pay-check'));
+  const priceDisplay = document.getElementById('priceDisplay');
+  const emailInput = document.getElementById('emailInput');
+  const payBtn = document.getElementById('payBtn');
+  const errorMsg = document.getElementById('errorMsg');
+  const loadingMsg = document.getElementById('loadingMsg');
+  const formCard = document.getElementById('formCard');
+  const iframeWrap = document.getElementById('iframeWrap');
+  const stancerFrame = document.getElementById('stancerFrame');
+  const successCard = document.getElementById('successCard');
+  const recapBox = document.getElementById('recapBox');
+  const recapList = document.getElementById('recapList');
+
+  function selectedProducts(){
+    return payChecks.filter(function(chk){ return chk.checked; }).map(function(chk){ return chk.getAttribute('data-product'); });
+  }
+
+  function updateRecapAndTotal(){
+    var chosen = selectedProducts();
+    if (!chosen.length) {
+      recapBox.style.display = 'none';
+      priceDisplay.textContent = 'Sélectionne au moins une prestation';
+      payBtn.disabled = true;
+      return;
+    }
+    payBtn.disabled = false;
+    var total = 0;
+    var html = '';
+    chosen.forEach(function(key){
+      var data = RECAP[key];
+      total += data.price;
+      html += '<li style="margin-bottom:10px;"><strong>' + data.title + ' — ' + data.priceLabel + '</strong><br>' + data.items.join(' · ') + '</li>';
+    });
+    recapList.innerHTML = html;
+    recapBox.style.display = 'block';
+    priceDisplay.textContent = total.toFixed(2).replace('.', ',') + ' €' + (chosen.indexOf('mensuelle') !== -1 ? ' (dont abonnement mensuel)' : '');
+  }
+
+  payChecks.forEach(function(chk){
+    chk.addEventListener('change', updateRecapAndTotal);
+  });
+
+  // Pré-sélectionne les prestations si on arrive depuis le formulaire ou l'accueil (paramètre "produits", séparé par des virgules)
+  const urlParams = new URLSearchParams(window.location.search);
+  const produitsParam = urlParams.get('produits') || urlParams.get('produit'); // rétro-compatibilité ancien paramètre au singulier
+  const emailParam = urlParams.get('email');
+  if (produitsParam) {
+    produitsParam.split(',').forEach(function(key){
+      var chk = document.querySelector('.pay-check[data-product="' + key.trim() + '"]');
+      if (chk) { chk.checked = true; }
+    });
+  }
+  if (emailParam) { emailInput.value = emailParam; }
+  updateRecapAndTotal();
+
+  payBtn.addEventListener('click', async function(){
+    errorMsg.style.display = 'none';
+    var chosen = selectedProducts();
+    if (!chosen.length) {
+      errorMsg.textContent = 'Sélectionne au moins une prestation.';
+      errorMsg.style.display = 'block';
+      return;
+    }
+    if (!emailInput.value) {
+      errorMsg.textContent = 'Merci de renseigner ton email.';
+      errorMsg.style.display = 'block';
+      return;
+    }
+    payBtn.disabled = true;
+    loadingMsg.style.display = 'block';
+    try {
+      const res = await fetch(BACKEND_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ produits: chosen, email: emailInput.value }),
+      });
+      const data = await res.json();
+      if (!res.ok) { throw new Error(data.error || 'Erreur inconnue'); }
+      stancerFrame.src = data.hppUrl;
+      formCard.style.display = 'none';
+      iframeWrap.style.display = 'block';
+    } catch (err) {
+      errorMsg.textContent = "Le paiement n'a pas pu démarrer (" + err.message + "). Réessaie ou contacte-nous.";
+      errorMsg.style.display = 'block';
+      payBtn.disabled = false;
+    } finally {
+      loadingMsg.style.display = 'none';
+    }
+  });
+
+  window.addEventListener('message', function(event){
+    if (!event.data || typeof event.data !== 'object') return;
+    if (event.data.status === 'finished') {
+      iframeWrap.style.display = 'none';
+      successCard.style.display = 'block';
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+  });
+</script>
+
+</body>
+</html>
