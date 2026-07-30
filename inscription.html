@@ -267,6 +267,7 @@
             <input type="checkbox" name="entry.423792434" value="Guidance Anniversaire à (s')offrir -  49,99e" id="prestaAnniv" class="presta-check">
             <span class="opt-text"><span class="opt-price">Guidance Anniversaire</span>49,99 € — à (s')offrir</span>
           </label>
+          <div class="error" id="prestaErrorMsg" style="display:none; color:#a3221f; font-size:13px; margin:6px 0 4px;">Sélectionne au moins une prestation.</div>
 
           <div class="conditional" id="questionBlock">
             <div class="field" style="margin-top:10px;">
@@ -311,6 +312,7 @@
                 <input type="text" name="entry.1041228807" id="destNom">
               </div>
             </div>
+            <div class="error" id="destErrorMsg" style="display:none; color:#a3221f; font-size:13px; margin:-6px 0 14px;">Merci de renseigner le prénom et le nom du destinataire.</div>
             <div class="field">
               <label>Date de naissance du destinataire</label>
               <input type="date" id="destDobPicker">
@@ -567,7 +569,23 @@
   var submitBtn = document.getElementById('submitBtn');
   var iframe = document.querySelector('iframe[name="hiddenFrame"]');
   var submitted = false;
+  var destPrenom = document.getElementById('destPrenom');
+  var destNom = document.getElementById('destNom');
+  var destNum = document.getElementById('destNum');
+  var destRue = document.getElementById('destRue');
+  var destCP = document.getElementById('destCP');
+  var destVille = document.getElementById('destVille');
+  var destPays = document.getElementById('destPays');
+  var destErrorMsg = document.getElementById('destErrorMsg');
+  var prestaErrorMsg = document.getElementById('prestaErrorMsg');
   form.addEventListener('submit', function(e){
+    var anyPrestaChecked = [document.getElementById('prestaMensuelle'), prestaPerso, document.getElementById('prestaAnniv')].some(function(chk){ return chk.checked; });
+    if (!anyPrestaChecked) {
+      e.preventDefault();
+      prestaErrorMsg.style.display = 'block';
+      prestaErrorMsg.scrollIntoView({ behavior:'smooth', block:'center' });
+      return;
+    }
     if (giftPrestaBlock.style.display === 'block') {
       var anyGiftChecked = Object.keys(giftRows).some(function(k){ return giftRows[k].chk.checked; });
       if (!anyGiftChecked) {
@@ -577,13 +595,30 @@
         return;
       }
     }
-    if (cadeauOui.checked && !envoiDirect.checked && !envoiChezMoi.checked) {
-      e.preventDefault();
-      shipErrorMsg.style.display = 'block';
-      shipErrorMsg.scrollIntoView({ behavior:'smooth', block:'center' });
-      return;
+    if (cadeauOui.checked) {
+      if (!envoiDirect.checked && !envoiChezMoi.checked) {
+        e.preventDefault();
+        shipErrorMsg.style.display = 'block';
+        shipErrorMsg.scrollIntoView({ behavior:'smooth', block:'center' });
+        return;
+      }
+      if (!destPrenom.value.trim() || !destNom.value.trim()) {
+        e.preventDefault();
+        destErrorMsg.style.display = 'block';
+        destPrenom.scrollIntoView({ behavior:'smooth', block:'center' });
+        return;
+      }
+      if (envoiDirect.checked && (!destNum.value.trim() || !destRue.value.trim() || !destCP.value.trim() || !destVille.value.trim() || !destPays.value.trim())) {
+        e.preventDefault();
+        destErrorMsg.textContent = "Merci de compléter l'adresse complète du destinataire.";
+        destErrorMsg.style.display = 'block';
+        destAdresseBlock.scrollIntoView({ behavior:'smooth', block:'center' });
+        return;
+      }
     }
     giftErrorMsg.style.display = 'none';
+    destErrorMsg.style.display = 'none';
+    prestaErrorMsg.style.display = 'none';
     submitBtn.disabled = true;
     submitBtn.textContent = 'Envoi en cours...';
     submitted = true;
