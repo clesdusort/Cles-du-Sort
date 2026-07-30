@@ -312,42 +312,56 @@
               </div>
             </div>
             <div class="field">
-              <label>Email du destinataire</label>
-              <input type="email" name="entry.799591536" id="destEmail">
-            </div>
-            <div class="field">
               <label>Date de naissance du destinataire</label>
               <input type="date" id="destDobPicker">
               <input type="hidden" name="entry.829338521_year" id="destDob_year">
               <input type="hidden" name="entry.829338521_month" id="destDob_month">
               <input type="hidden" name="entry.829338521_day" id="destDob_day">
             </div>
-            <div class="grid2">
-              <div class="field">
-                <label>Numéro de rue du destinataire</label>
-                <input type="text" name="entry.1552971421" id="destNum">
-              </div>
-              <div class="field">
-                <label>Nom de rue du destinataire</label>
-                <input type="text" name="entry.308152362" id="destRue">
-              </div>
-            </div>
-            <div class="grid2">
-              <div class="field">
-                <label>Code postal du destinataire</label>
-                <input type="text" name="entry.1150309182" id="destCP">
-              </div>
-              <div class="field">
-                <label>Ville du destinataire</label>
-                <input type="text" name="entry.463225868" id="destVille">
-              </div>
-            </div>
+
             <div class="field">
-              <label>Pays du destinataire</label>
-              <input type="text" name="entry.17565481" id="destPays">
+              <label>Où souhaites-tu que le cadeau soit envoyé ? <span class="req">*</span></label>
+              <div class="radio-row">
+                <label class="radio-pill"><input type="radio" name="entry.277998878" value="Envoi direct chez le destinataire" id="envoiDirect"> Directement chez le destinataire</label>
+                <label class="radio-pill"><input type="radio" name="entry.277998878" value="A mon adresse" id="envoiChezMoi"> Chez moi, pour l'offrir moi-même</label>
+              </div>
+              <div class="error" id="shipErrorMsg" style="display:none; color:#a3221f; font-size:13px; margin:6px 0 4px;">Précise comment tu souhaites recevoir ce cadeau.</div>
+            </div>
+
+            <div class="conditional" id="destAdresseBlock">
+              <div class="grid2">
+                <div class="field">
+                  <label>Numéro de rue du destinataire</label>
+                  <input type="text" name="entry.1552971421" id="destNum">
+                </div>
+                <div class="field">
+                  <label>Nom de rue du destinataire</label>
+                  <input type="text" name="entry.308152362" id="destRue">
+                </div>
+              </div>
+              <div class="grid2">
+                <div class="field">
+                  <label>Code postal du destinataire</label>
+                  <input type="text" name="entry.1150309182" id="destCP">
+                </div>
+                <div class="field">
+                  <label>Ville du destinataire</label>
+                  <input type="text" name="entry.463225868" id="destVille">
+                </div>
+              </div>
+              <div class="field">
+                <label>Pays du destinataire</label>
+                <input type="text" name="entry.17565481" id="destPays">
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Un mot pour accompagner ton cadeau ? (optionnel)</label>
+              <textarea name="entry.2001476408" id="giftMessage" rows="3" placeholder="Ce message sera glissé avec la lettre..." style="width:100%; padding:12px 14px; border-radius:10px; border:1.5px solid var(--line); font-family:var(--sans); font-size:15px; resize:vertical;"></textarea>
             </div>
           </div>
         </div>
+
 
         <div class="card">
           <label class="consent-row">
@@ -487,7 +501,20 @@
   var destinataireBlock = document.getElementById('destinataireBlock');
   function toggleDestinataire(show){ destinataireBlock.classList.toggle('open', show); }
   cadeauOui.addEventListener('change', function(){ toggleDestinataire(true); updateGiftBlock(); });
-  cadeauNon.addEventListener('change', function(){ toggleDestinataire(false); updateGiftBlock(); });
+  cadeauNon.addEventListener('change', function(){
+    toggleDestinataire(false); updateGiftBlock();
+    envoiDirect.checked = false; envoiChezMoi.checked = false;
+    destAdresseBlock.classList.remove('open');
+    shipErrorMsg.style.display = 'none';
+  });
+
+  // Mode d'envoi du cadeau : directement chez le destinataire (adresse requise) ou chez le client (pas d'adresse à demander)
+  var envoiDirect = document.getElementById('envoiDirect');
+  var envoiChezMoi = document.getElementById('envoiChezMoi');
+  var destAdresseBlock = document.getElementById('destAdresseBlock');
+  var shipErrorMsg = document.getElementById('shipErrorMsg');
+  envoiDirect.addEventListener('change', function(){ destAdresseBlock.classList.add('open'); shipErrorMsg.style.display = 'none'; });
+  envoiChezMoi.addEventListener('change', function(){ destAdresseBlock.classList.remove('open'); shipErrorMsg.style.display = 'none'; });
 
   // Sous-question "laquelle de tes prestations est un cadeau ?" — uniquement utile si 2 ou 3 prestations sont cochées
   var giftPrestaBlock = document.getElementById('giftPrestaBlock');
@@ -549,6 +576,12 @@
         giftPrestaBlock.scrollIntoView({ behavior:'smooth', block:'center' });
         return;
       }
+    }
+    if (cadeauOui.checked && !envoiDirect.checked && !envoiChezMoi.checked) {
+      e.preventDefault();
+      shipErrorMsg.style.display = 'block';
+      shipErrorMsg.scrollIntoView({ behavior:'smooth', block:'center' });
+      return;
     }
     giftErrorMsg.style.display = 'none';
     submitBtn.disabled = true;
