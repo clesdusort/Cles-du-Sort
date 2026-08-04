@@ -174,31 +174,33 @@
   <div class="wrap-narrow">
 
     <div class="card" id="formCard">
-      <div class="field">
-        <label>Prestation</label>
-        <select id="productSelect">
-          <option value="mensuelle">Guidance Mensuelle — 34,99 € / mois</option>
-          <option value="personnalisee">Guidance Personnalisée — 39,99 €</option>
-          <option value="anniversaire">Guidance Anniversaire — 49,99 €</option>
-        </select>
-      </div>
-      <div class="field">
+      <div id="recapProducts"></div>
+      <div class="field" id="emailFieldWrap">
         <label>Ton email</label>
         <input type="email" id="emailInput" placeholder="toi@exemple.com" required>
       </div>
-      <div class="price" id="priceDisplay">34,99 €</div>
+      <div class="price" id="priceDisplay">0,00 €</div>
       <button class="btn btn-gold btn-block" id="payBtn">Procéder au paiement</button>
       <div class="error" id="errorMsg"></div>
       <div class="loading" id="loadingMsg">Préparation du paiement...</div>
-      <p class="secure-note">Une fois le paiement validé, tu seras redirigée vers le formulaire pour finaliser ta commande (adresse, date de naissance...).</p>
+      <p class="secure-note" id="secureNote">Une fois le paiement validé, ta commande est enregistrée automatiquement — pas besoin de repasser par le formulaire.</p>
     </div>
 
     <div id="iframeWrap">
       <iframe id="stancerFrame" allow="payment"></iframe>
     </div>
 
+    <div id="resultState" class="card" style="display:none; text-align:center;">
+      <div id="resultIcon" style="font-size:38px; margin-bottom:6px;"></div>
+      <h2 id="resultTitle"></h2>
+      <p id="resultMessage" style="color:#444;"></p>
+      <div id="resultActions" style="margin-top:22px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;"></div>
+    </div>
+
   </div>
 </main>
+
+<iframe name="gformHiddenFrame" style="display:none;"></iframe>
 
 <footer id="contact">
   <div class="wrap">
@@ -270,13 +272,19 @@
     cookieBanner.classList.add('visible');
   });
 
-  // ⚠️ Remplace ces URLs par celles de tes fonctions déployées sur Vercel
   const BACKEND_URL = 'https://cles-du-sort-paiement.vercel.app/api/create-payment';
   const CAPTURE_URL = 'https://cles-du-sort-paiement.vercel.app/api/capture-payment';
+  const GFORM_ACTION = 'https://docs.google.com/forms/u/0/d/e/1FAIpQLScVAVS1yj87m--vKkaA-FPnQLXbD-qADYDxHCh6r5WWO_ed4Q/formResponse';
 
-  const PRICES = { mensuelle: '34,99 € / mois', personnalisee: '39,99 €', anniversaire: '49,99 €' };
+  // Doit rester identique aux tarifs définis côté serveur (create-payment.js) —
+  // ici uniquement pour l'affichage avant l'appel au backend, qui reste la source de vérité.
+  const PRODUCTS = {
+    mensuelle: { label: 'Guidance Mensuelle', priceDisplay: '34,99 € / mois', amount: 3499 },
+    personnalisee: { label: 'Guidance Personnalisée', priceDisplay: '39,99 €', amount: 3999 },
+    anniversaire: { label: 'Guidance Anniversaire', priceDisplay: '49,99 €', amount: 4999 },
+  };
 
-  const productSelect = document.getElementById('productSelect');
+  const recapProducts = document.getElementById('recapProducts');
   const priceDisplay = document.getElementById('priceDisplay');
   const emailInput = document.getElementById('emailInput');
   const payBtn = document.getElementById('payBtn');
@@ -285,14 +293,77 @@
   const formCard = document.getElementById('formCard');
   const iframeWrap = document.getElementById('iframeWrap');
   const stancerFrame = document.getElementById('stancerFrame');
+  const resultState = document.getElementById('resultState');
   let currentPaymentIntentId = null;
+  let selectedProducts = [];
+  let pendingOrder = null;
 
-  productSelect.addEventListener('change', function(){
-    priceDisplay.textContent = PRICES[productSelect.value];
-  });
+  function loadPendingOrder(){
+    try {
+      var raw = sessionStorage.getItem('cds_pending_order');
+      return raw ? JSON.parse(raw) : null;
+    } catch(e){ return null; }
+  }
+
+  function formatEuros(cents){
+    return (cents/100).toFixed(2).replace('.', ',') + ' €';
+  }
+
+  function updatePriceDisplay(){
+    var total = selectedProducts.reduce(function(sum, id){ return sum + (PRODUCTS[id] ? PRODUCTS[id].amount : 0); }, 0);
+    priceDisplay.textContent = formatEuros(total);
+  }
+
+  function renderRecap(){
+    if (pendingOrder && Array.isArray(pendingOrder.products) && pendingOrder.products.length) {
+      // Sélection reprise depuis le formulaire d'inscription : recap en lecture seule
+      selectedProducts = pendingOrder.products.filter(function(id){ return PRODUCTS[id]; });
+      var itemsHtml = selectedProducts.map(function(id){
+        var p = PRODUCTS[id];
+        return '<li style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--line); font-size:14.5px;">' +
+          '<span>' + p.label + '</span><strong>' + p.priceDisplay + '</strong></li>';
+      }).join('');
+      recapProducts.innerHTML =
+        '<label style="display:block; font-size:13px; font-weight:700; margin-bottom:10px; color:var(--ink);">Ta sélection</label>' +
+        '<ul style="list-style:none; margin:0 0 8px; padding:0;">' + itemsHtml + '</ul>' +
+        '<a href="inscription.html" style="font-size:13px; color:#777; text-decoration:underline;">Modifier ma sélection</a>';
+
+      if (pendingOrder.email) {
+        emailInput.value = pendingOrder.email;
+      }
+    } else {
+      // Accès direct à cette page, sans passer par le formulaire : sélection manuelle
+      var optionsHtml = Object.keys(PRODUCTS).map(function(id){
+        var p = PRODUCTS[id];
+        return '<label style="display:flex; align-items:center; gap:10px; padding:12px 14px; border:1.5px solid var(--line); border-radius:12px; margin-bottom:10px; cursor:pointer;">' +
+          '<input type="checkbox" class="fallback-product" value="' + id + '" style="width:18px; height:18px; flex-shrink:0; accent-color:var(--gold-deep);">' +
+          '<span style="font-size:14.5px;"><strong style="display:block; color:var(--ink);">' + p.label + '</strong>' + p.priceDisplay + '</span>' +
+          '</label>';
+      }).join('');
+      recapProducts.innerHTML =
+        '<label style="display:block; font-size:13px; font-weight:700; margin-bottom:10px; color:var(--ink);">Prestation(s)</label>' +
+        optionsHtml;
+
+      recapProducts.querySelectorAll('.fallback-product').forEach(function(chk){
+        chk.addEventListener('change', function(){
+          selectedProducts = Array.from(recapProducts.querySelectorAll('.fallback-product:checked')).map(function(c){ return c.value; });
+          updatePriceDisplay();
+        });
+      });
+    }
+    updatePriceDisplay();
+  }
+
+  pendingOrder = loadPendingOrder();
+  renderRecap();
 
   payBtn.addEventListener('click', async function(){
     errorMsg.style.display = 'none';
+    if (!selectedProducts.length) {
+      errorMsg.textContent = 'Merci de sélectionner au moins une prestation.';
+      errorMsg.style.display = 'block';
+      return;
+    }
     if (!emailInput.value) {
       errorMsg.textContent = 'Merci de renseigner ton email.';
       errorMsg.style.display = 'block';
@@ -304,7 +375,7 @@
       const res = await fetch(BACKEND_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ productId: productSelect.value, email: emailInput.value }),
+        body: JSON.stringify({ productIds: selectedProducts, email: emailInput.value }),
       });
       const data = await res.json();
       if (!res.ok) { throw new Error(data.error || 'Erreur inconnue'); }
@@ -321,12 +392,85 @@
     }
   });
 
-  // ⚠️ Le nom exact de l'événement postMessage ("finished") est une hypothèse de travail,
-  // à confirmer/ajuster lors du premier vrai test (la doc Stancer ne précise pas le format exact ici).
+  function showResult(kind, title, message, actions){
+    formCard.style.display = 'none';
+    iframeWrap.style.display = 'none';
+    var icon = document.getElementById('resultIcon');
+    var titleEl = document.getElementById('resultTitle');
+    var msgEl = document.getElementById('resultMessage');
+    var actionsEl = document.getElementById('resultActions');
+
+    var icons = { success: '✨', declined: '💳', error: '⚠️' };
+    var colors = { success: 'var(--ink)', declined: '#a3221f', error: '#a3221f' };
+
+    icon.textContent = icons[kind] || '✨';
+    titleEl.textContent = title;
+    titleEl.style.color = colors[kind] || 'var(--ink)';
+    msgEl.textContent = message;
+    actionsEl.innerHTML = '';
+    actions.forEach(function(a){
+      var el = document.createElement('a');
+      el.href = a.href;
+      el.className = 'btn ' + (a.primary ? 'btn-gold' : 'btn-navy');
+      el.textContent = a.label;
+      actionsEl.appendChild(el);
+    });
+
+    resultState.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function submitToGoogleForms(formDataObj){
+    return new Promise(function(resolve){
+      var hiddenIframe = document.querySelector('iframe[name="gformHiddenFrame"]');
+      var tempForm = document.createElement('form');
+      tempForm.action = GFORM_ACTION;
+      tempForm.method = 'POST';
+      tempForm.target = 'gformHiddenFrame';
+      tempForm.style.display = 'none';
+
+      Object.keys(formDataObj).forEach(function(name){
+        formDataObj[name].forEach(function(value){
+          var input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = name;
+          input.value = value;
+          tempForm.appendChild(input);
+        });
+      });
+
+      document.body.appendChild(tempForm);
+
+      var settled = false;
+      function done(){ if (!settled) { settled = true; resolve(); } }
+      hiddenIframe.addEventListener('load', done, { once: true });
+      setTimeout(done, 3000); // filet de sécurité si l'événement 'load' ne se déclenche pas
+
+      tempForm.submit();
+    });
+  }
+
+  // ⚠️ Seul l'événement "finished" (succès du couple paiement + 3DS) est documenté avec
+  // certitude côté Stancer. Tout autre statut explicite renvoyé par l'iframe est traité
+  // comme un échec — sans appel à la capture, puisqu'il n'y a alors rien à capturer.
   window.addEventListener('message', async function(event){
     if (!event.data || typeof event.data !== 'object') return;
+
+    if (event.data.status && event.data.status !== 'finished') {
+      showResult('declined', 'Paiement non abouti',
+        "Le paiement n'a pas pu être finalisé. Rien n'a été enregistré de notre côté — tu peux réessayer.",
+        [
+          { label: 'Réessayer', href: 'paiement.html', primary: true },
+          { label: "Retour à l'accueil", href: 'index.html' },
+        ]);
+      return;
+    }
+
     if (event.data.status === 'finished' && currentPaymentIntentId) {
-      iframeWrap.innerHTML = '<p style="text-align:center; color:#666;">Finalisation du paiement...</p>';
+      iframeWrap.style.display = 'none';
+      loadingMsg.textContent = 'Finalisation du paiement...';
+      loadingMsg.style.display = 'block';
+
       try {
         const captureRes = await fetch(CAPTURE_URL, {
           method: 'POST',
@@ -334,14 +478,48 @@
           body: JSON.stringify({ paymentIntentId: currentPaymentIntentId }),
         });
         const captureData = await captureRes.json();
-        if (!captureRes.ok) {
-          throw new Error(captureData.error || 'La capture du paiement a échoué');
+        loadingMsg.style.display = 'none';
+
+        if (captureRes.ok) {
+          // Paiement confirmé : on enregistre la commande, et seulement maintenant.
+          if (pendingOrder && pendingOrder.formData) {
+            await submitToGoogleForms(pendingOrder.formData);
+            sessionStorage.removeItem('cds_pending_order');
+          }
+          showResult('success', 'Paiement confirmé ✨',
+            "Merci ! Ta commande est enregistrée, je m'attelle à la préparation de ta lettre.",
+            [ { label: "Retour à l'accueil", href: 'index.html', primary: true } ]);
+          return;
         }
-        window.location.href = 'inscription.html';
+
+        if (captureRes.status === 409) {
+          // Paiement autorisé mais non capturable (refusé, expiré...) : rien n'est enregistré.
+          var statusLabels = {
+            refused: "Ta banque a refusé ce paiement.",
+            failed: "Le paiement a échoué.",
+            expired: "Le délai d'autorisation a expiré.",
+          };
+          var explanation = statusLabels[captureData.status] ||
+            ("Le paiement n'a pas pu être confirmé (statut : " + (captureData.status || 'inconnu') + ").");
+          showResult('declined', 'Paiement non confirmé',
+            explanation + " Rien n'a été enregistré de notre côté — tu peux réessayer avec une autre carte.",
+            [
+              { label: 'Réessayer', href: 'paiement.html', primary: true },
+              { label: "Retour à l'accueil", href: 'index.html' },
+            ]);
+          return;
+        }
+
+        // Autre erreur (technique, 502/500...) : on ne sait pas avec certitude où en est le paiement.
+        showResult('error', 'Un problème technique est survenu',
+          "Ton paiement a peut-être été autorisé mais la confirmation a rencontré un problème. Contacte-nous à cles.dusort@gmail.com avec ton email de commande, on vérifiera manuellement — rien ne sera produit sans qu'on ait confirmé ton paiement.",
+          [ { label: "Retour à l'accueil", href: 'index.html', primary: true } ]);
+
       } catch (err) {
-        iframeWrap.innerHTML = '<p style="text-align:center; color:#a3221f;">' +
-          'Ton paiement a été autorisé mais la finalisation a rencontré un problème (' + err.message + '). ' +
-          'Contacte-nous à cles.dusort@gmail.com avec ton email de commande, on vérifiera manuellement.</p>';
+        loadingMsg.style.display = 'none';
+        showResult('error', 'Un problème technique est survenu',
+          "Ton paiement a peut-être été autorisé mais la confirmation a rencontré un problème (" + err.message + "). Contacte-nous à cles.dusort@gmail.com avec ton email de commande, on vérifiera manuellement.",
+          [ { label: "Retour à l'accueil", href: 'index.html', primary: true } ]);
       }
     }
   });
