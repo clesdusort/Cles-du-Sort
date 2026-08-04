@@ -451,31 +451,23 @@
   }
 
   // ⚠️ Seul l'événement "finished" (succès du couple paiement + 3DS) est documenté avec
-  // certitude côté Stancer. Tout autre statut explicite renvoyé par l'iframe est traité
-  // comme un échec — sans appel à la capture, puisqu'il n'y a alors rien à capturer.
+  // certitude côté Stancer. On ne réagit qu'à celui-ci, et uniquement si un paiement est
+  // réellement en cours (currentPaymentIntentId défini) — d'autres scripts présents sur la
+  // page (ex. extensions de navigateur, antivirus comme Kaspersky) peuvent aussi envoyer des
+  // messages avec un champ "status", qu'il ne faut surtout pas confondre avec une réponse de
+  // paiement. En cas de vrai refus bancaire, Stancer affiche lui-même le message d'erreur
+  // directement dans sa fenêtre de paiement — inutile de le deviner ici.
   window.addEventListener('message', async function(event){
     if (!event.data || typeof event.data !== 'object') return;
-    // On ignore tout message qui ne vient pas explicitement de l'iframe Stancer :
-    // d'autres scripts du site (Analytics, bandeau cookies...) émettent aussi des messages,
-    // et il ne faut surtout pas les confondre avec une réponse de paiement.
     if (event.source !== stancerFrame.contentWindow) return;
+    if (!currentPaymentIntentId) return;
+    if (event.data.status !== 'finished') return;
 
-    if (event.data.status && event.data.status !== 'finished') {
-      showResult('declined', 'Paiement non abouti',
-        "Le paiement n'a pas pu être finalisé. Rien n'a été enregistré de notre côté — tu peux réessayer.",
-        [
-          { label: 'Réessayer', href: 'paiement.html', primary: true },
-          { label: "Retour à l'accueil", href: 'index.html' },
-        ]);
-      return;
-    }
+    iframeWrap.style.display = 'none';
+    loadingMsg.textContent = 'Finalisation du paiement...';
+    loadingMsg.style.display = 'block';
 
-    if (event.data.status === 'finished' && currentPaymentIntentId) {
-      iframeWrap.style.display = 'none';
-      loadingMsg.textContent = 'Finalisation du paiement...';
-      loadingMsg.style.display = 'block';
-
-      try {
+    try {
         const captureRes = await fetch(CAPTURE_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -525,7 +517,6 @@
           "Ton paiement a peut-être été autorisé mais la confirmation a rencontré un problème (" + err.message + "). Contacte-nous à cles.dusort@gmail.com avec ton email de commande, on vérifiera manuellement.",
           [ { label: "Retour à l'accueil", href: 'index.html', primary: true } ]);
       }
-    }
   });
 </script>
 
