@@ -455,6 +455,10 @@
   // comme un échec — sans appel à la capture, puisqu'il n'y a alors rien à capturer.
   window.addEventListener('message', async function(event){
     if (!event.data || typeof event.data !== 'object') return;
+    // On ignore tout message qui ne vient pas explicitement de l'iframe Stancer :
+    // d'autres scripts du site (Analytics, bandeau cookies...) émettent aussi des messages,
+    // et il ne faut surtout pas les confondre avec une réponse de paiement.
+    if (event.source !== stancerFrame.contentWindow) return;
 
     if (event.data.status && event.data.status !== 'finished') {
       showResult('declined', 'Paiement non abouti',
