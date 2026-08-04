@@ -190,7 +190,7 @@
   <div class="wrap-narrow">
     <div class="kicker" style="justify-content:center;" id="formHeroKicker"><img src="assets/picto-simple.png" alt="">Prépare ta lettre</div>
     <p id="presetBanner" style="display:none; font-weight:700; color:var(--gold-deep); margin-bottom:6px;">✨ Sélection reprise depuis l'accueil — modifie-la si besoin ci-dessous.</p>
-    <p id="formHeroText">Remplis ce formulaire tranquillement, ça prend deux minutes. Tes données ne servent qu'à préparer et t'envoyer ta lettre, rien d'autre.</p>
+    <p id="formHeroText">Remplis ce formulaire tranquillement, ça prend deux minutes, puis tu seras dirigé(e) directement vers le paiement. Rien n'est enregistré tant que le paiement n'est pas validé.</p>
   </div>
 </section>
 
@@ -198,7 +198,7 @@
   <div class="wrap-narrow">
 
     <div id="formWrap">
-      <form id="csForm" action="https://docs.google.com/forms/u/0/d/e/1FAIpQLScVAVS1yj87m--vKkaA-FPnQLXbD-qADYDxHCh6r5WWO_ed4Q/formResponse" method="POST" target="hiddenFrame">
+      <form id="csForm">
 
         <div class="card">
           <h2>Tes informations</h2>
@@ -377,17 +377,14 @@
     </div>
 
     <div class="status-msg" id="statusMsg">
-      <h2>C'est enregistré ✨</h2>
-      <p>Merci ! Tes informations sont bien arrivées. Il ne reste plus qu'à valider le règlement pour lancer la préparation de ta lettre.</p>
-      <p style="font-size:13px; color:#777; max-width:420px; margin:-10px auto 24px;">Besoin de modifier une information ? Écris-nous à <a href="mailto:cles.dusort@gmail.com" style="color:var(--gold-deep);">cles.dusort@gmail.com</a>.</p>
-      <a href="paiement.html" class="btn btn-gold" id="goToPaymentBtn">Procéder au règlement de ta commande</a>
-      <div style="margin-top:14px;"><a href="index.html" style="font-size:13.5px; color:#777; text-decoration:underline;">Retour au site</a></div>
+      <h2>C'est noté ✨</h2>
+      <p>On t'emmène directement à l'étape du paiement — tes informations ne seront enregistrées qu'une fois le règlement validé.</p>
+      <p style="font-size:13px; color:#777; max-width:420px; margin:-10px auto 24px;">Si la redirection ne se fait pas automatiquement, <a href="paiement.html" style="color:var(--gold-deep);">clique ici</a>.</p>
+      <div style="margin-top:14px;"><a href="index.html" style="font-size:13.5px; color:#777; text-decoration:underline;">Annuler et retourner au site</a></div>
     </div>
 
   </div>
 </main>
-
-<iframe name="hiddenFrame" style="display:none;"></iframe>
 
 <footer id="contact">
   <div class="wrap">
@@ -478,26 +475,6 @@
     questionBlock.classList.toggle('open', prestaPerso.checked);
   });
 
-  // Reprise de la sélection depuis l'accueil : préremplir, sans verrouiller (on peut ajouter d'autres prestations)
-  (function(){
-    var params = new URLSearchParams(window.location.search);
-    var produit = params.get('produit');
-    var email = params.get('email');
-    var emailField = document.getElementById('emailField');
-    if (email && emailField) { emailField.value = email; }
-    if (produit) {
-      var presetBanner = document.getElementById('presetBanner');
-      if (presetBanner) { presetBanner.style.display = 'block'; }
-    }
-
-    var map = { mensuelle: 'prestaMensuelle', personnalisee: 'prestaPerso', anniversaire: 'prestaAnniv' };
-    if (produit && map[produit]) {
-      var target = document.getElementById(map[produit]);
-      target.checked = true;
-      if (target === prestaPerso) { questionBlock.classList.add('open'); }
-    }
-  })();
-
   var cadeauOui = document.getElementById('cadeauOui');
   var cadeauNon = document.getElementById('cadeauNon');
   var destinataireBlock = document.getElementById('destinataireBlock');
@@ -563,12 +540,79 @@
     chk.addEventListener('change', updateGiftBlock);
   });
 
+  // Reprise de la sélection : soit une reprise simple depuis l'accueil (?produit=... dans l'URL),
+  // soit une restauration complète des informations déjà saisies si on revient depuis la page
+  // de paiement (via "Modifier ma sélection"), stockées temporairement dans sessionStorage.
+  (function(){
+    var params = new URLSearchParams(window.location.search);
+    var produit = params.get('produit');
+    var produits = params.get('produits'); // liste séparée par virgules
+    var email = params.get('email');
+    var emailField = document.getElementById('emailField');
+    var presetBanner = document.getElementById('presetBanner');
+
+    var pending = null;
+    try {
+      var raw = sessionStorage.getItem('cds_pending_order');
+      if (raw) { pending = JSON.parse(raw); }
+    } catch(e){}
+
+    if (pending && pending.formData) {
+      // Restauration complète depuis une commande en attente (retour depuis le paiement)
+      if (presetBanner) {
+        presetBanner.textContent = '✨ Tes informations précédentes ont été restaurées — modifie-les si besoin.';
+        presetBanner.style.display = 'block';
+      }
+      Object.keys(pending.formData).forEach(function(name){
+        var values = pending.formData[name];
+        var els = document.getElementsByName(name);
+        els.forEach(function(el, idx){
+          if (el.type === 'checkbox' || el.type === 'radio') {
+            el.checked = values.indexOf(el.value) !== -1;
+          } else if (values[idx] !== undefined) {
+            el.value = values[idx];
+          } else if (values[0] !== undefined) {
+            el.value = values[0];
+          }
+        });
+      });
+      // Reconstitue l'affichage des sélecteurs de date à partir des champs cachés restaurés
+      [['dob', 'dobPicker'], ['destDob', 'destDobPicker']].forEach(function(pair){
+        var prefix = pair[0], pickerId = pair[1];
+        var y = document.getElementById(prefix + '_year');
+        var m = document.getElementById(prefix + '_month');
+        var d = document.getElementById(prefix + '_day');
+        var picker = document.getElementById(pickerId);
+        if (y && y.value && m && m.value && d && d.value && picker) {
+          picker.value = y.value + '-' + String(m.value).padStart(2, '0') + '-' + String(d.value).padStart(2, '0');
+        }
+      });
+      questionBlock.classList.toggle('open', prestaPerso.checked);
+      toggleDestinataire(cadeauOui.checked);
+      if (envoiDirect.checked) { destAdresseBlock.classList.add('open'); }
+      updateGiftBlock();
+    } else {
+      // Reprise simple depuis l'accueil, sans passage préalable par ce formulaire
+      if (email && emailField) { emailField.value = email; }
+      var map = { mensuelle: 'prestaMensuelle', personnalisee: 'prestaPerso', anniversaire: 'prestaAnniv' };
+      var idsToCheck = produits ? produits.split(',').map(function(s){ return s.trim(); }) : (produit ? [produit] : []);
+      if (idsToCheck.length) {
+        if (presetBanner) { presetBanner.style.display = 'block'; }
+        idsToCheck.forEach(function(id){
+          if (map[id]) {
+            var target = document.getElementById(map[id]);
+            target.checked = true;
+            if (target === prestaPerso) { questionBlock.classList.add('open'); }
+          }
+        });
+      }
+    }
+  })();
+
   var form = document.getElementById('csForm');
   var formWrap = document.getElementById('formWrap');
   var statusMsg = document.getElementById('statusMsg');
   var submitBtn = document.getElementById('submitBtn');
-  var iframe = document.querySelector('iframe[name="hiddenFrame"]');
-  var submitted = false;
   var destPrenom = document.getElementById('destPrenom');
   var destNom = document.getElementById('destNom');
   var destNum = document.getElementById('destNum');
@@ -579,9 +623,12 @@
   var destErrorMsg = document.getElementById('destErrorMsg');
   var prestaErrorMsg = document.getElementById('prestaErrorMsg');
   form.addEventListener('submit', function(e){
+    // On ne soumet plus jamais directement à Google Forms depuis cette page : tes informations
+    // ne partent vers la Google Sheet qu'une fois le paiement confirmé, depuis paiement.html.
+    e.preventDefault();
+
     var anyPrestaChecked = [document.getElementById('prestaMensuelle'), prestaPerso, document.getElementById('prestaAnniv')].some(function(chk){ return chk.checked; });
     if (!anyPrestaChecked) {
-      e.preventDefault();
       prestaErrorMsg.style.display = 'block';
       prestaErrorMsg.scrollIntoView({ behavior:'smooth', block:'center' });
       return;
@@ -589,7 +636,6 @@
     if (giftPrestaBlock.style.display === 'block') {
       var anyGiftChecked = Object.keys(giftRows).some(function(k){ return giftRows[k].chk.checked; });
       if (!anyGiftChecked) {
-        e.preventDefault();
         giftErrorMsg.style.display = 'block';
         giftPrestaBlock.scrollIntoView({ behavior:'smooth', block:'center' });
         return;
@@ -597,19 +643,16 @@
     }
     if (cadeauOui.checked) {
       if (!envoiDirect.checked && !envoiChezMoi.checked) {
-        e.preventDefault();
         shipErrorMsg.style.display = 'block';
         shipErrorMsg.scrollIntoView({ behavior:'smooth', block:'center' });
         return;
       }
       if (!destPrenom.value.trim() || !destNom.value.trim()) {
-        e.preventDefault();
         destErrorMsg.style.display = 'block';
         destPrenom.scrollIntoView({ behavior:'smooth', block:'center' });
         return;
       }
       if (envoiDirect.checked && (!destNum.value.trim() || !destRue.value.trim() || !destCP.value.trim() || !destVille.value.trim() || !destPays.value.trim())) {
-        e.preventDefault();
         destErrorMsg.textContent = "Merci de compléter l'adresse complète du destinataire.";
         destErrorMsg.style.display = 'block';
         destAdresseBlock.scrollIntoView({ behavior:'smooth', block:'center' });
@@ -619,32 +662,37 @@
     giftErrorMsg.style.display = 'none';
     destErrorMsg.style.display = 'none';
     prestaErrorMsg.style.display = 'none';
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Envoi en cours...';
-    submitted = true;
-  });
-  iframe.addEventListener('load', function(){
-    if (submitted) {
-      formWrap.style.display = 'none';
-      statusMsg.classList.add('visible');
-      window.scrollTo({top:0, behavior:'smooth'});
 
-      var presetBannerEl = document.getElementById('presetBanner');
-      if (presetBannerEl) { presetBannerEl.style.display = 'none'; }
-      var formHeroSection = document.getElementById('formHeroSection');
-      if (formHeroSection) { formHeroSection.style.display = 'none'; }
+    // Sélection des prestations choisies
+    var selectedProducts = [];
+    if (document.getElementById('prestaMensuelle').checked) { selectedProducts.push('mensuelle'); }
+    if (prestaPerso.checked) { selectedProducts.push('personnalisee'); }
+    if (document.getElementById('prestaAnniv').checked) { selectedProducts.push('anniversaire'); }
 
-      var chosen = [];
-      if (document.getElementById('prestaMensuelle').checked) { chosen.push('mensuelle'); }
-      if (document.getElementById('prestaPerso').checked) { chosen.push('personnalisee'); }
-      if (document.getElementById('prestaAnniv').checked) { chosen.push('anniversaire'); }
-      var emailValue = document.getElementById('emailField').value;
-      var payParams = new URLSearchParams();
-      if (chosen.length) { payParams.set('produits', chosen.join(',')); }
-      if (emailValue) { payParams.set('email', emailValue); }
-      var goToPaymentBtn = document.getElementById('goToPaymentBtn');
-      goToPaymentBtn.href = 'paiement.html' + (payParams.toString() ? '?' + payParams.toString() : '');
+    // Capture de TOUTES les valeurs du formulaire (texte, cases cochées, radios, dates cachées...)
+    var fd = new FormData(form);
+    var formDataObj = {};
+    for (var pair of fd.entries()) {
+      var name = pair[0], value = pair[1];
+      if (!formDataObj[name]) { formDataObj[name] = []; }
+      formDataObj[name].push(value);
     }
+
+    sessionStorage.setItem('cds_pending_order', JSON.stringify({
+      products: selectedProducts,
+      email: document.getElementById('emailField').value,
+      formData: formDataObj,
+    }));
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Direction le paiement...';
+    formWrap.style.display = 'none';
+    statusMsg.classList.add('visible');
+    window.scrollTo({top:0, behavior:'smooth'});
+
+    setTimeout(function(){
+      window.location.href = 'paiement.html';
+    }, 500);
   });
 </script>
 
