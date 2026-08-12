@@ -262,6 +262,7 @@
     display:flex; align-items:center; gap:10px; padding:11px 20px 11px 12px; border-radius:999px;
     border:1.5px solid var(--line); background:var(--white); cursor:pointer; font-family:var(--sans);
     font-weight:700; font-size:14px; color:var(--ink); transition:all .25s ease; text-decoration:none;
+    white-space:nowrap; flex-shrink:0;
   }
   .step-btn .step-num{
     display:flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:50%;
@@ -270,6 +271,13 @@
   .step-btn.active{border-color:var(--ink); background:var(--ink); color:var(--white);}
   .step-btn.active .step-num{background:var(--gold); color:var(--ink);}
   .step-btn:hover:not(.active){border-color:var(--gold);}
+  @media (max-width:600px){
+    .product-stepper{flex-wrap:nowrap; gap:6px;}
+    .step-btn{
+      flex:1; justify-content:center; padding:8px 6px; font-size:11px; gap:0;
+    }
+    .step-btn .step-num{display:none;}
+  }
 
   /* ---------- Blocs produits empilés (titre + carte + photo) ---------- */
   .product-block{margin-bottom:56px; scroll-margin-top:100px;}
