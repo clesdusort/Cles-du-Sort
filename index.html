@@ -138,10 +138,10 @@
   .section-tight{padding:50px 0;}
 
   /* ---------- Concept ---------- */
-  .concept-grid{display:grid; grid-template-columns:.85fr 1.15fr; gap:50px; align-items:stretch;}
+  .concept-grid{display:grid; grid-template-columns:.72fr 1.15fr; gap:50px; align-items:stretch;}
   .concept-photo{
     overflow:hidden; border-radius:4px;
-    background-image:url('assets/photo-main.jpg'); background-size:cover; background-position:center;
+    background-image:url('assets/photo-main.png'); background-size:cover; background-position:center;
     min-height:0;
   }
   .concept-panel{
@@ -256,12 +256,12 @@
     .product-carousel-wrap .car-btn{width:38px; height:38px;}
   }
 
-  /* ---------- Stepper produits (1-2-3) + panneaux pleine largeur ---------- */
-  .product-stepper{display:flex; gap:12px; margin-bottom:32px; flex-wrap:wrap;}
+  /* ---------- Stepper produits (1-2-3, ancres de navigation) ---------- */
+  .product-stepper{display:flex; gap:12px; margin-bottom:40px; flex-wrap:wrap;}
   .step-btn{
     display:flex; align-items:center; gap:10px; padding:11px 20px 11px 12px; border-radius:999px;
     border:1.5px solid var(--line); background:var(--white); cursor:pointer; font-family:var(--sans);
-    font-weight:700; font-size:14px; color:var(--ink); transition:all .25s ease;
+    font-weight:700; font-size:14px; color:var(--ink); transition:all .25s ease; text-decoration:none;
   }
   .step-btn .step-num{
     display:flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:50%;
@@ -271,51 +271,47 @@
   .step-btn.active .step-num{background:var(--gold); color:var(--ink);}
   .step-btn:hover:not(.active){border-color:var(--gold);}
 
-  .product-panel-full{
-    scroll-snap-align:start; flex:0 0 100%; width:100%;
-    display:grid; grid-template-columns:.9fr 1.1fr; gap:44px; align-items:center;
-    background:var(--ink); border-radius:var(--r-lg); padding:40px; color:var(--white);
+  /* ---------- Blocs produits empilés (titre + carte + photo) ---------- */
+  .product-block{margin-bottom:56px; scroll-margin-top:100px;}
+  .product-block:last-child{margin-bottom:0;}
+  .product-block-head{margin-bottom:20px; max-width:none;}
+  .product-block-head h3{font-size:19px; font-weight:800; color:var(--ink); margin:0 0 8px; line-height:1.3;}
+  .product-block-head p{font-size:13px; color:#555; margin:0 0 2px;}
+
+  .product-block-body{display:grid; grid-template-columns:1.15fr .85fr; gap:24px; align-items:stretch;}
+  .product-block-body .panel-inner{
+    background:var(--ink); border-radius:var(--r-md); padding:26px 30px; color:var(--white);
+    display:flex; flex-direction:column; height:100%;
+    box-shadow:0 18px 40px -20px rgba(39,39,87,.45);
   }
-  .product-panels{
-    display:flex; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; -webkit-overflow-scrolling:touch;
+  .product-block-photo{position:relative; border-radius:var(--r-md); overflow:hidden;}
+  .product-block-photo img{position:absolute; inset:0; width:100%; height:100%; object-fit:contain; display:block;}
+  /* Desktop/tablette : en quinconce, une ligne sur deux inverse carte et photo */
+  @media (min-width:761px){
+    .product-block-body.reverse{grid-template-columns:.85fr 1.15fr;}
+    .product-block-body.reverse .panel-inner{order:2;}
+    .product-block-body.reverse .product-block-photo{order:1;}
   }
-  .product-panels::-webkit-scrollbar{display:none;}
-  .product-full-carousel-wrap{position:relative;}
-  .product-full-carousel-wrap .car-btn{
-    position:absolute; top:auto; bottom:14px; transform:none; z-index:5;
-    background:rgba(255,255,255,.85); backdrop-filter:blur(4px); border-color:transparent;
-    box-shadow:0 6px 16px -6px rgba(39,39,87,.35);
+  /* Mobile : ordre toujours identique (carte puis photo), le quinconce n'a plus de sens en une colonne */
+  @media (max-width:760px){
+    .product-block-body{grid-template-columns:1fr;}
+    .product-block-body .panel-inner{order:1;}
+    .product-block-photo{order:2; height:220px;}
+    .product-block-photo img{width:100%; height:100%;}
+    .product-block-head h3{white-space:normal !important;}
   }
-  .product-full-carousel-wrap .car-btn:hover{background:var(--ink);}
-  .product-full-carousel-wrap .car-btn:hover svg{stroke:var(--white);}
-  .product-full-carousel-wrap #prodFullPrev{left:6px;}
-  .product-full-carousel-wrap #prodFullNext{right:6px;}
-  @media (max-width:900px){
-    .product-full-carousel-wrap .car-btn{width:38px; height:38px;}
-  }
-  .product-panel-full.reverse{grid-template-columns:1.1fr .9fr;}
-  .product-panel-full.reverse .panel-photo{order:2;}
-  .panel-photo{border-radius:var(--r-md); overflow:hidden; height:100%; min-height:300px;}
-  .panel-photo img{width:100%; height:100%; min-height:300px; object-fit:cover; display:block;}
-  .panel-content .kicker{color:var(--white); margin-bottom:6px;}
-  .panel-badge{
-    display:inline-block; background:var(--gold); color:var(--ink); font-size:11.5px; font-weight:800;
-    letter-spacing:.04em; text-transform:uppercase; padding:5px 14px; border-radius:999px; margin-bottom:14px;
-  }
-  .panel-badge-alt{background:var(--white); color:var(--ink);}
-  .panel-price{font-size:28px; font-weight:800; color:var(--gold); margin-bottom:20px;}
-  .panel-price span{font-family:var(--sans); font-size:13.5px; font-weight:600; color:#cfcee6;}
-  .panel-content ul{list-style:none; margin:0 0 22px; padding:0;}
-  .panel-content li{position:relative; padding-left:20px; margin-bottom:10px; font-size:14.5px; line-height:1.5;}
-  .panel-content li::before{content:""; position:absolute; left:0; top:8px; width:6px; height:6px; border-radius:50%; background:var(--gold);}
-  .panel-desc{font-size:13.5px; color:#dcdbf0; margin:18px 0 0;}
-  .panel-desc:first-of-type{margin-top:20px;}
-  .panel-note{color:var(--gold); font-size:13px; margin-top:10px;}
-  @media (max-width:860px){
-    .product-panel-full, .product-panel-full.reverse{grid-template-columns:1fr; padding:26px;}
-    .product-panel-full.reverse .panel-photo{order:-1;}
-    .panel-photo, .panel-photo img{min-height:220px;}
-  }
+
+  .panel-top-row{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:8px;}
+  .panel-top-row .kicker{color:var(--white); margin-bottom:0; font-size:18px;}
+  .panel-top-row .kicker img{width:28px;}
+  .panel-tag{font-size:11.5px; font-weight:800; color:var(--gold); text-transform:uppercase; letter-spacing:.03em; white-space:nowrap;}
+  .panel-price{font-size:22px; font-weight:800; color:var(--gold); margin-bottom:16px;}
+  .panel-price span{font-family:var(--sans); font-size:13px; font-weight:600; color:#cfcee6;}
+  .panel-intro{font-size:13.5px; font-weight:700; color:var(--white); margin:0 0 8px;}
+  .panel-list{list-style:none; margin:0 0 20px; padding:0;}
+  .panel-list li{position:relative; padding-left:17px; margin-bottom:9px; font-size:13px; line-height:1.5; color:#e5e4f2;}
+  .panel-list li::before{content:""; position:absolute; left:0; top:7px; width:5px; height:5px; border-radius:50%; background:var(--gold);}
+  .panel-cta{display:inline-flex; width:fit-content; margin-top:auto; padding:12px 28px; font-size:14.5px;}
 
   /* ---------- Galerie photo (carrousel) ---------- */
   .gallery-track{
@@ -325,21 +321,8 @@
   .gallery-track::-webkit-scrollbar{display:none;}
   .gallery-slide{scroll-snap-align:start; flex:0 0 auto; width:320px;}
   .gallery-slide img{width:100%; height:260px; object-fit:cover; border-radius:var(--r-md); display:block;}
-  .gallery-carousel-wrap{position:relative;}
-  .gallery-carousel-wrap .car-btn{
-    position:absolute; top:auto; bottom:14px; transform:none; z-index:5;
-    background:rgba(255,255,255,.7); backdrop-filter:blur(4px); border-color:transparent;
-    box-shadow:0 6px 16px -6px rgba(39,39,87,.35);
-  }
-  .gallery-carousel-wrap .car-btn:hover{background:var(--ink);}
-  .gallery-carousel-wrap .car-btn:hover svg{stroke:var(--white);}
-  .gallery-carousel-wrap #galPrev{left:-6px;}
-  .gallery-carousel-wrap #galNext{right:-6px;}
-  @media (max-width:640px){
-    .gallery-slide{width:78vw;}
-    .gallery-slide img{height:220px;}
-    .gallery-carousel-wrap .car-btn{width:38px; height:38px;}
-  }
+  .oracle-single-photo{margin:0 0 24px; text-align:center;}
+  .oracle-single-photo img{max-width:400px; width:100%; border-radius:var(--r-md); display:inline-block;}
 
   /* ---------- Bannière newsletter ---------- */
   .newsletter-banner{
@@ -444,7 +427,7 @@
     .separator img{width:200px;}
     .oracle-head-text p{font-size:14.5px;}
     .product-slide{width:92vw;}
-    .cta-banner .logo-img{height:50px !important;}
+    .cta-banner .logo-img{width:228px !important; height:auto !important;}
     .footer-grid{gap:26px;}
     .hero-photo img{max-width:220px;}
     a.btn:not(.btn-block){display:flex; width:fit-content; margin-left:auto !important; margin-right:auto !important;}
@@ -650,112 +633,105 @@
         Les correspondances de Clés du Sort
       </div>
 
-      <div class="env-photo" style="margin-top:40px;">
-        <img src="assets/photo-lettre.jpg" alt="Enveloppe scellée à la cire">
-      </div>
-
       <div class="oracle-head">
         <div class="oracle-head-text">
           <div class="kicker small"><img src="assets/picto-oracle.png" alt="" style="width:64px;">Le Courrier de l'Oracle</div>
+
+          <div class="oracle-single-photo">
+            <img src="assets/photo-lettre.png" alt="Enveloppe du Courrier de l'Oracle">
+          </div>
+
           <p>Trois façons de recevoir une guidance par courrier, pour t'offrir un moment posé, rien que pour toi, et faire le point sur où tu en es.</p>
           <p style="margin-top:14px;">Chaque tirage s'appuie sur l'<strong>Oracle de Belline</strong>, un jeu de 53 cartes né dans la tradition française de la divination. C'est le premier jeu de la maison ; d'autres viendront bientôt s'y ajouter.</p>
         </div>
       </div>
 
       <div class="product-stepper" id="productStepper">
-        <button class="step-btn active" data-panel="0" type="button"><span class="step-num">1</span>Mensuelle</button>
-        <button class="step-btn" data-panel="1" type="button"><span class="step-num">2</span>Personnalisée</button>
-        <button class="step-btn" data-panel="2" type="button"><span class="step-num">3</span>Anniversaire</button>
+        <a class="step-btn active" href="#produit-mensuelle" data-target="produit-mensuelle"><span class="step-num">1</span>Mensuelle</a>
+        <a class="step-btn" href="#produit-personnalisee" data-target="produit-personnalisee"><span class="step-num">2</span>Personnalisée</a>
+        <a class="step-btn" href="#produit-anniversaire" data-target="produit-anniversaire"><span class="step-num">3</span>Anniversaire</a>
       </div>
 
-      <div class="product-full-carousel-wrap">
-        <button class="car-btn" id="prodFullPrev" aria-label="Précédent"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
-        <button class="car-btn" id="prodFullNext" aria-label="Suivant"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
-
-      <div class="product-panels" id="productPanels">
-
-        <!-- Guidance Mensuelle -->
-        <div class="product-panel-full" data-panel="0">
-          <div class="panel-photo"><img src="assets/photo-lettre.jpg" alt="Enveloppe du Courrier de l'Oracle scellée à la cire"></div>
-          <div class="panel-content">
-            <span class="panel-badge">Notre recommandation</span>
-            <div class="kicker"><img src="assets/picto-oracle.png" alt="">La guidance mensuelle</div>
-            <div class="panel-price">34,99&nbsp;€ <span>/ mois &middot; sans engagement</span></div>
-            <ul>
-              <li>Tirage personnalisé de 3 cartes (Oracle de Belline)</li>
-              <li>Lettre entièrement écrite et fabriquée à la main</li>
-              <li>Illustration originale incluse</li>
-              <li>Enfumage à l'encens et scellage à la cire</li>
-              <li>Un thé à déguster, et quelques surprises</li>
-            </ul>
-            <a href="inscription.html?produit=mensuelle" class="btn btn-gold">Je m'abonne</a>
-            <p class="panel-desc">Chaque mois, un tirage de 3 cartes pour lire les énergies qui traversent ta période, et une clé pour avancer. Ta lettre arrive chez toi accompagnée d'une illustration originale, d'un thé à préparer et d'une musique à écouter pendant que tu la lis (et d'autres surprises glissées à l'intérieur).</p>
-            <p class="panel-desc">Inscris-toi avant le 15 du mois pour recevoir ta première lettre le mois suivant.</p>
-            <p class="panel-note">Places limitées chaque mois.</p>
-          </div>
+      <!-- Guidance Mensuelle -->
+      <div class="product-block" id="produit-mensuelle">
+        <div class="product-block-head">
+          <h3>Tu as envie de t'offrir un moment de détente chaque mois&nbsp;?</h3>
+          <p>Places limitées chaque mois.</p>
+          <p>Inscris-toi avant le 15 du mois pour recevoir ta première lettre le mois suivant.</p>
         </div>
+        <div class="product-block-body">
+          <div class="panel-inner">
+            <div class="panel-top-row">
+              <div class="kicker"><img src="assets/picto-oracle.png" alt="">La guidance mensuelle</div>
+              <span class="panel-tag">Sans engagement</span>
+            </div>
+            <div class="panel-price">34,99&nbsp;€ <span>/ mois</span></div>
+            <p class="panel-intro">Chaque mois, tu trouveras dans le courrier :</p>
+            <ul class="panel-list">
+              <li>Un tirage personnalisé de 3 cartes de l'Oracle de Belline pour comprendre les énergies qui traversent ton mois, et une clé pour avancer</li>
+              <li>Une illustration originale incluse</li>
+              <li>Un thé à déguster et de nombreuses autres surprises secrètes à découvrir</li>
+            </ul>
+            <a href="inscription.html?produit=mensuelle" class="btn btn-gold panel-cta">Je m'abonne</a>
+          </div>
+          <div class="product-block-photo"><img src="assets/Lettre-mensuelle.png" alt="Photo de la Guidance Mensuelle"></div>
+        </div>
+      </div>
 
-        <!-- Guidance Personnalisée -->
-        <div class="product-panel-full reverse" data-panel="1">
-          <div class="panel-photo"><img src="assets/photo-plateau.jpg" alt="Courrier de l'Oracle posé sur un plateau doré"></div>
-          <div class="panel-content">
-            <span class="panel-badge panel-badge-alt">À (s')offrir</span>
-            <div class="kicker"><img src="assets/picto-oracle.png" alt="">La guidance personnalisée</div>
+      <!-- Guidance Personnalisée -->
+      <div class="product-block" id="produit-personnalisee">
+        <div class="product-block-head">
+          <h3 style="white-space:nowrap;">Tu as une question qui t'occupe l'esprit ou tu as besoin d'un éclairage détaillé&nbsp;?</h3>
+          <p>La lettre sera reçue deux semaines après avoir commandé.</p>
+        </div>
+        <div class="product-block-body reverse">
+          <div class="panel-inner">
+            <div class="panel-top-row">
+              <div class="kicker"><img src="assets/picto-oracle.png" alt="">La guidance personnalisée</div>
+              <span class="panel-tag">À (s')offrir</span>
+            </div>
             <div class="panel-price">39,99&nbsp;€</div>
-            <ul>
-              <li>Tirage personnalisé de 3 cartes (Oracle de Belline)</li>
-              <li>Lettre entièrement écrite et fabriquée à la main</li>
-              <li>Illustration originale incluse</li>
-              <li>Enfumage à l'encens et scellage à la cire</li>
-              <li>Un thé à déguster, et quelques surprises</li>
+            <p class="panel-intro">Tu trouveras dans le courrier :</p>
+            <ul class="panel-list">
+              <li>Un tirage de 3 cartes de l'Oracle de Belline construit spécialement pour répondre à ta question</li>
+              <li>Une illustration originale incluse</li>
+              <li>Un thé à déguster et de nombreuses autres surprises secrètes à découvrir</li>
             </ul>
-            <a href="inscription.html?produit=personnalisee" class="btn btn-gold">Je commande</a>
-            <p class="panel-desc">À choisir si une question précise t'occupe l'esprit, ou si tu as juste besoin d'un éclairage plus poussé sur une situation. Le tirage est construit spécialement pour répondre à ta question.</p>
-            <p class="panel-desc">Compte environ deux semaines de fabrication à partir de ta commande.</p>
+            <a href="inscription.html?produit=personnalisee" class="btn btn-gold panel-cta">Je commande</a>
           </div>
+          <div class="product-block-photo"><img src="assets/Lettre-personnalisee.png" alt="Photo de la Guidance Personnalisée"></div>
         </div>
+      </div>
 
-        <!-- Guidance Anniversaire -->
-        <div class="product-panel-full" data-panel="2">
-          <div class="panel-photo"><img src="assets/photo-main.jpg" alt="Main tenant l'enveloppe scellée à la cire"></div>
-          <div class="panel-content">
-            <span class="panel-badge panel-badge-alt">À (s')offrir</span>
-            <div class="kicker"><img src="assets/picto-oracle.png" alt="">La guidance anniversaire</div>
+      <!-- Guidance Anniversaire -->
+      <div class="product-block" id="produit-anniversaire">
+        <div class="product-block-head">
+          <h3>Tu as envie d'offrir un cadeau original pour un/ton anniversaire&nbsp;?</h3>
+          <p>La lettre sera reçue deux semaines après avoir commandé.</p>
+        </div>
+        <div class="product-block-body">
+          <div class="panel-inner">
+            <div class="panel-top-row">
+              <div class="kicker"><img src="assets/picto-oracle.png" alt="">La guidance anniversaire</div>
+              <span class="panel-tag">À (s')offrir</span>
+            </div>
             <div class="panel-price">49,99&nbsp;€</div>
-            <ul>
-              <li>Tirage personnalisé de 8 cartes (Oracle de Belline)</li>
-              <li>Lettre entièrement écrite et fabriquée à la main</li>
-              <li>Illustration originale incluse</li>
-              <li>Enfumage à l'encens et scellage à la cire</li>
-              <li>Un thé à déguster, et quelques surprises</li>
+            <p class="panel-intro">Tu trouveras dans le courrier :</p>
+            <ul class="panel-list">
+              <li>Un tirage personnalisé de 8 cartes de l'Oracle de Belline, basé sur une date de naissance, pour explorer les énergies du nouveau cycle de façon détaillée</li>
+              <li>Une illustration originale incluse</li>
+              <li>Un thé à déguster et de nombreuses autres surprises secrètes à découvrir</li>
             </ul>
-            <a href="inscription.html?produit=anniversaire" class="btn btn-gold">Je commande</a>
-            <p class="panel-desc">Un tirage de 8 cartes construit à partir d'une date de naissance, pour explorer les énergies positives et bloquantes du cycle qui commence. Puis, je te fais une synthèse trimestre par trimestre, pour les quatre à venir.</p>
-            <p class="panel-desc">Compte environ deux semaines de fabrication à partir de ta commande.</p>
+            <a href="inscription.html?produit=anniversaire" class="btn btn-gold panel-cta">Je commande</a>
           </div>
+          <div class="product-block-photo"><img src="assets/Lettre-anniversaire.png" alt="Photo de la Guidance Anniversaire"></div>
         </div>
+      </div>
 
-      </div>
-      </div>
     </div>
   </section>
 
-  <!-- GALERIE -->
-  <section class="section-tight">
-    <div class="wrap">
-      <div class="kicker" style="justify-content:center;"><img src="assets/picto-simple.png" alt="">Un aperçu en images</div>
-      <div class="gallery-carousel-wrap">
-        <button class="car-btn" id="galPrev" aria-label="Précédent"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
-        <button class="car-btn" id="galNext" aria-label="Suivant"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
-        <div class="gallery-track" id="galTrack">
-          <div class="gallery-slide"><img src="assets/photo-lettre.jpg" alt="Enveloppe scellée à la cire"></div>
-          <div class="gallery-slide"><img src="assets/photo-plateau.jpg" alt="Courrier de l'Oracle posé sur un plateau doré"></div>
-          <div class="gallery-slide"><img src="assets/photo-main.jpg" alt="Main tenant l'enveloppe scellée à la cire"></div>
-        </div>
-      </div>
-      <div class="carousel-dots" id="galDots"></div>
-    </div>
-  </section>
+  <div class="separator"><img src="assets/separateur-dore.png" alt=""></div>
 
   <!-- COURRIER DES SORCIÈRES — NEWSLETTER -->
   <section class="section-tight sorc-block">
@@ -776,7 +752,7 @@
   <!-- CTA BANNER -->
   <section class="cta-banner">
     <div class="wrap">
-      <img class="logo-img" src="assets/logo-blanc-baseline.png" alt="Clés du Sort" style="height:70px; margin:0 auto 24px;">
+      <img class="logo-img" src="assets/Lettres-logo.png" alt="Clés du Sort" style="width:312px; height:auto; margin:0 auto 24px;">
       <h2>Rejoins le club</h2>
       <p class="sub">Tout commence par un simple clic&nbsp;!</p>
       <div class="cta-social">
@@ -919,58 +895,33 @@
   }
 
   setupCarousel('carTrack','carDots','carPrev','carNext');
-  setupCarousel('galTrack','galDots','galPrev','galNext');
 
-  // Carrousel produits pleine largeur : swipe + flèches, synchronisé avec les pastilles 1-2-3
+  // Stepper produits : navigation par ancre + surbrillance selon la section visible au scroll
   (function(){
-    var track = document.getElementById('productPanels');
     var stepBtns = Array.from(document.querySelectorAll('#productStepper .step-btn'));
-    var prevBtn = document.getElementById('prodFullPrev');
-    var nextBtn = document.getElementById('prodFullNext');
-    var slides = Array.from(track.children);
+    var blocks = stepBtns.map(function(btn){ return document.getElementById(btn.dataset.target); }).filter(Boolean);
 
-    stepBtns.forEach(function(btn, i){
-      btn.addEventListener('click', function(){
-        slides[i].scrollIntoView({ behavior:'smooth', inline:'start', block:'nearest' });
+    stepBtns.forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        e.preventDefault();
+        var target = document.getElementById(btn.dataset.target);
+        if (target) { target.scrollIntoView({ behavior:'smooth', block:'start' }); }
       });
     });
-
-    function slideWidth(){ return slides[0].getBoundingClientRect().width; }
-
-    function updateEdges(){
-      var maxScroll = track.scrollWidth - track.clientWidth - 2;
-      var atStart = track.scrollLeft <= 2;
-      var atEnd = track.scrollLeft >= maxScroll;
-      prevBtn.disabled = atStart;
-      nextBtn.disabled = atEnd;
-      prevBtn.style.opacity = atStart ? '.35' : '1';
-      nextBtn.style.opacity = atEnd ? '.35' : '1';
-      prevBtn.style.pointerEvents = atStart ? 'none' : 'auto';
-      nextBtn.style.pointerEvents = atEnd ? 'none' : 'auto';
-    }
-
-    prevBtn.addEventListener('click', function(){ track.scrollBy({ left: -slideWidth(), behavior:'smooth' }); });
-    nextBtn.addEventListener('click', function(){ track.scrollBy({ left: slideWidth(), behavior:'smooth' }); });
-
-    var scrollTimer;
-    track.addEventListener('scroll', function(){
-      clearTimeout(scrollTimer);
-      scrollTimer = setTimeout(updateEdges, 60);
-    });
-    window.addEventListener('resize', updateEdges);
-    updateEdges();
 
     if ('IntersectionObserver' in window){
       var io = new IntersectionObserver(function(entries){
         entries.forEach(function(entry){
-          var idx = slides.indexOf(entry.target);
-          if (entry.isIntersecting && idx !== -1){
-            stepBtns.forEach(function(b){ b.classList.remove('active'); });
-            stepBtns[idx].classList.add('active');
+          if (entry.isIntersecting){
+            var idx = blocks.indexOf(entry.target);
+            if (idx !== -1){
+              stepBtns.forEach(function(b){ b.classList.remove('active'); });
+              stepBtns[idx].classList.add('active');
+            }
           }
         });
-      }, { root: track, threshold: 0.6 });
-      slides.forEach(function(s){ io.observe(s); });
+      }, { threshold: 0.3, rootMargin: '-100px 0px -50% 0px' });
+      blocks.forEach(function(b){ io.observe(b); });
     }
   })();
 
