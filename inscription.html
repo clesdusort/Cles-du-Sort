@@ -377,14 +377,17 @@
     </div>
 
     <div class="status-msg" id="statusMsg">
-      <h2>C'est noté ✨</h2>
-      <p>On t'emmène directement à l'étape du paiement — tes informations ne seront enregistrées qu'une fois le règlement validé.</p>
-      <p style="font-size:13px; color:#777; max-width:420px; margin:-10px auto 24px;">Si la redirection ne se fait pas automatiquement, <a href="paiement.html" style="color:var(--gold-deep);">clique ici</a>.</p>
+      <h2 id="statusTitle">C'est noté ✨</h2>
+      <p id="statusText">On t'emmène directement à l'étape du paiement — tes informations ne seront enregistrées qu'une fois le règlement validé.</p>
+      <p id="statusSubtext" style="font-size:13px; color:#777; max-width:420px; margin:-10px auto 24px;">Si la redirection ne se fait pas automatiquement, <a href="paiement.html" style="color:var(--gold-deep);">clique ici</a>.</p>
       <div style="margin-top:14px;"><a href="index.html" style="font-size:13.5px; color:#777; text-decoration:underline;">Annuler et retourner au site</a></div>
     </div>
 
   </div>
 </main>
+
+<!-- Iframe cachée utilisée UNIQUEMENT en mode manuel d'urgence (EMERGENCY_MANUAL_MODE), voir <script> plus bas -->
+<iframe name="hiddenFrame" style="display:none;"></iframe>
 
 <footer id="contact">
   <div class="wrap">
@@ -428,6 +431,14 @@
 </div>
 
 <script>
+  // 🚨 MODE MANUEL D'URGENCE — Stancer n'a pas encore délivré la clé API de production.
+  // Tant que EMERGENCY_MANUAL_MODE = true, le formulaire part directement vers Google Sheets
+  // (comme avant notre système payant-avant-tout), et Carole envoie un lien de paiement Stancer
+  // manuellement depuis son Espace Client, pour chaque nouvelle réponse.
+  // ⚠️ À REMETTRE À false dès que la clé API de production est active, pour revenir au circuit
+  // automatique (paiement d'abord, enregistrement seulement après confirmation).
+  const EMERGENCY_MANUAL_MODE = true;
+
   var burger = document.getElementById('burgerBtn');
   var links = document.getElementById('navLinks');
   burger.addEventListener('click', function(){ links.classList.toggle('open'); });
@@ -678,13 +689,32 @@
       formDataObj[name].push(value);
     }
 
+    submitBtn.disabled = true;
+
+    if (EMERGENCY_MANUAL_MODE) {
+      // 🚨 Envoi immédiat vers Google Forms — Carole enverra le lien de paiement Stancer
+      // manuellement, et ne démarre la production qu'après avoir vu le paiement confirmé
+      // dans son tableau de bord Stancer.
+      submitBtn.textContent = 'Envoi en cours...';
+      submitDirectlyToGoogleForms(formDataObj).then(function(){
+        document.getElementById('statusTitle').textContent = "C'est enregistré ✨";
+        document.getElementById('statusText').textContent =
+          "Merci ! Tes informations sont bien arrivées. Tu vas recevoir sous peu, par email, un lien de paiement sécurisé pour finaliser ta commande.";
+        document.getElementById('statusSubtext').style.display = 'none';
+        formWrap.style.display = 'none';
+        statusMsg.classList.add('visible');
+        window.scrollTo({top:0, behavior:'smooth'});
+      });
+      return;
+    }
+
+    // Circuit normal : rien n'est enregistré avant confirmation du paiement.
     sessionStorage.setItem('cds_pending_order', JSON.stringify({
       products: selectedProducts,
       email: document.getElementById('emailField').value,
       formData: formDataObj,
     }));
 
-    submitBtn.disabled = true;
     submitBtn.textContent = 'Direction le paiement...';
     formWrap.style.display = 'none';
     statusMsg.classList.add('visible');
@@ -694,6 +724,38 @@
       window.location.href = 'paiement.html';
     }, 500);
   });
+
+  // Utilisé uniquement en EMERGENCY_MANUAL_MODE : soumission directe et immédiate à Google Forms,
+  // via une iframe cachée (même mécanique que l'ancien circuit, avant paiement-avant-tout).
+  function submitDirectlyToGoogleForms(formDataObj){
+    return new Promise(function(resolve){
+      var hiddenIframe = document.querySelector('iframe[name="hiddenFrame"]');
+      var tempForm = document.createElement('form');
+      tempForm.action = 'https://docs.google.com/forms/u/0/d/e/1FAIpQLScVAVS1yj87m--vKkaA-FPnQLXbD-qADYDxHCh6r5WWO_ed4Q/formResponse';
+      tempForm.method = 'POST';
+      tempForm.target = 'hiddenFrame';
+      tempForm.style.display = 'none';
+
+      Object.keys(formDataObj).forEach(function(name){
+        formDataObj[name].forEach(function(value){
+          var input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = name;
+          input.value = value;
+          tempForm.appendChild(input);
+        });
+      });
+
+      document.body.appendChild(tempForm);
+
+      var settled = false;
+      function done(){ if (!settled) { settled = true; resolve(); } }
+      hiddenIframe.addEventListener('load', done, { once: true });
+      setTimeout(done, 3000); // filet de sécurité si l'événement 'load' ne se déclenche pas
+
+      tempForm.submit();
+    });
+  }
 </script>
 
 </body>
