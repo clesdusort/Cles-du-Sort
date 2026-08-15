@@ -701,6 +701,8 @@
         document.getElementById('statusText').textContent =
           "Merci ! Tes informations sont bien arrivées. Tu vas recevoir sous peu, par email, un lien de paiement sécurisé pour finaliser ta commande.";
         document.getElementById('statusSubtext').style.display = 'none';
+        var formHeroSection1 = document.getElementById('formHeroSection');
+        if (formHeroSection1) { formHeroSection1.style.display = 'none'; }
         formWrap.style.display = 'none';
         statusMsg.classList.add('visible');
         window.scrollTo({top:0, behavior:'smooth'});
@@ -716,6 +718,8 @@
     }));
 
     submitBtn.textContent = 'Direction le paiement...';
+    var formHeroSection2 = document.getElementById('formHeroSection');
+    if (formHeroSection2) { formHeroSection2.style.display = 'none'; }
     formWrap.style.display = 'none';
     statusMsg.classList.add('visible');
     window.scrollTo({top:0, behavior:'smooth'});
