@@ -431,13 +431,10 @@
 </div>
 
 <script>
-  // 🚨 MODE MANUEL D'URGENCE — Stancer n'a pas encore délivré la clé API de production.
-  // Tant que EMERGENCY_MANUAL_MODE = true, le formulaire part directement vers Google Sheets
-  // (comme avant notre système payant-avant-tout), et Carole envoie un lien de paiement Stancer
-  // manuellement depuis son Espace Client, pour chaque nouvelle réponse.
-  // ⚠️ À REMETTRE À false dès que la clé API de production est active, pour revenir au circuit
-  // automatique (paiement d'abord, enregistrement seulement après confirmation).
-  const EMERGENCY_MANUAL_MODE = true;
+  // ✅ Clé API de production Stancer active — retour au circuit automatique normal.
+  // (Historique : ce drapeau avait été passé à true temporairement le week-end du 15-16 août 2026,
+  // en attendant la clé API de production. Repassé à false une fois celle-ci active.)
+  const EMERGENCY_MANUAL_MODE = false;
 
   var burger = document.getElementById('burgerBtn');
   var links = document.getElementById('navLinks');
