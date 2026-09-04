@@ -467,11 +467,41 @@
     loadingMsg.textContent = 'Finalisation du paiement...';
     loadingMsg.style.display = 'block';
 
+    // On extrait les infos client depuis les données du formulaire (si disponibles), pour la
+    // génération de la facture — le backend n'a jamais accès à ces infos autrement, puisqu'on
+    // ne lui envoie normalement que l'email et les produits choisis.
+    function extraireClientDepuisFormData(fd){
+      if (!fd) return null;
+      function val(entryId){
+        return (fd[entryId] && fd[entryId][0]) ? fd[entryId][0] : '';
+      }
+      var prenom = val('entry.998307135');
+      var nom = val('entry.1663086099');
+      var num = val('entry.359196432');
+      var rue = val('entry.1696442176');
+      var cp = val('entry.997541389');
+      var ville = val('entry.301216716');
+      var pays = val('entry.1568539585');
+      if (!prenom && !nom) return null;
+      return {
+        nom: (prenom + ' ' + nom).trim(),
+        adresse: (num + ' ' + rue).trim(),
+        codePostal: cp,
+        ville: ville,
+        pays: pays || 'France',
+      };
+    }
+    var clientInfo = extraireClientDepuisFormData(pendingOrder && pendingOrder.formData);
+
     try {
         const captureRes = await fetch(CAPTURE_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ paymentIntentId: currentPaymentIntentId }),
+          body: JSON.stringify({
+            paymentIntentId: currentPaymentIntentId,
+            email: emailInput.value,
+            client: clientInfo,
+          }),
         });
         const captureData = await captureRes.json();
         loadingMsg.style.display = 'none';
