@@ -494,6 +494,29 @@
     }
     var clientInfo = extraireClientDepuisFormData(pendingOrder && pendingOrder.formData);
 
+    // Infos cadeau (si la lettre part chez quelqu'un d'autre que l'acheteur), pour que
+    // l'email de confirmation précise clairement où elle sera livrée.
+    function extraireCadeauDepuisFormData(fd){
+      if (!fd) return null;
+      function val(entryId){
+        return (fd[entryId] && fd[entryId][0]) ? fd[entryId][0] : '';
+      }
+      var estCadeau = val('entry.987211269') === 'Oui';
+      var envoi = val('entry.277998878');
+      if (!estCadeau || envoi !== "A l'adresse du destinataire") return null;
+      var prenom = val('entry.1286062923');
+      var nom = val('entry.1041228807');
+      if (!prenom && !nom) return null;
+      return {
+        nom: (prenom + ' ' + nom).trim(),
+        adresse: (val('entry.1552971421') + ' ' + val('entry.308152362')).trim(),
+        codePostal: val('entry.1150309182'),
+        ville: val('entry.463225868'),
+        pays: val('entry.17565481') || 'France',
+      };
+    }
+    var cadeauInfo = extraireCadeauDepuisFormData(pendingOrder && pendingOrder.formData);
+
     try {
         const captureRes = await fetch(CAPTURE_URL, {
           method: 'POST',
@@ -501,7 +524,9 @@
           body: JSON.stringify({
             paymentIntentId: currentPaymentIntentId,
             email: emailInput.value,
+            products: selectedProducts,
             client: clientInfo,
+            cadeau: cadeauInfo,
           }),
         });
         const captureData = await captureRes.json();
