@@ -516,6 +516,10 @@
         codePostal: val('entry.1150309182'),
         ville: val('entry.463225868'),
         pays: val('entry.17565481') || 'France',
+        // Libellé complet de la prestation concernée (ex. "Guidance Mensuelle") — permet au
+        // backend de savoir à quelle Guidance précise ce cadeau est rattaché, quand la commande
+        // en contient plusieurs.
+        produit: val('entry.655475462'),
       };
     }
     var cadeauInfo = extraireCadeauDepuisFormData(pendingOrder && pendingOrder.formData);
