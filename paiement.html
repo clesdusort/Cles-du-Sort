@@ -295,6 +295,7 @@
   const stancerFrame = document.getElementById('stancerFrame');
   const resultState = document.getElementById('resultState');
   let currentPaymentIntentId = null;
+  let paiementDejaTraite = false; // filet de sécurité côté site : évite un double appel de capture
   let selectedProducts = [];
   let pendingOrder = null;
 
@@ -462,6 +463,8 @@
     if (event.source !== stancerFrame.contentWindow) return;
     if (!currentPaymentIntentId) return;
     if (event.data.status !== 'finished') return;
+    if (paiementDejaTraite) return; // déjà géré une fois, on ignore tout doublon
+    paiementDejaTraite = true;
 
     iframeWrap.style.display = 'none';
     loadingMsg.textContent = 'Finalisation du paiement...';
