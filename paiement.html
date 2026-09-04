@@ -504,6 +504,12 @@
       function val(entryId){
         return (fd[entryId] && fd[entryId][0]) ? fd[entryId][0] : '';
       }
+      // entry.655475462 est un groupe de CASES À COCHER (une par prestation) : la cliente peut
+      // cocher plusieurs Guidances comme cadeaux à la fois, toutes envoyées au même destinataire.
+      // On récupère donc TOUTES les valeurs cochées, pas juste la première.
+      function valTout(entryId){
+        return fd[entryId] || [];
+      }
       var estCadeau = val('entry.987211269') === 'Oui';
       var envoi = val('entry.277998878');
       if (!estCadeau || envoi !== "A l'adresse du destinataire") return null;
@@ -516,10 +522,10 @@
         codePostal: val('entry.1150309182'),
         ville: val('entry.463225868'),
         pays: val('entry.17565481') || 'France',
-        // Libellé complet de la prestation concernée (ex. "Guidance Mensuelle") — permet au
-        // backend de savoir à quelle Guidance précise ce cadeau est rattaché, quand la commande
-        // en contient plusieurs.
-        produit: val('entry.655475462'),
+        // Libellés COMPLETS (avec prix, ex. "Guidance Anniversaire à (s')offrir -  49,99e") de
+        // TOUTES les prestations cochées comme cadeau — permet au backend de savoir à quelle(s)
+        // Guidance(s) précise(s) ce cadeau est rattaché, quand la commande en contient plusieurs.
+        produits: valTout('entry.655475462'),
       };
     }
     var cadeauInfo = extraireCadeauDepuisFormData(pendingOrder && pendingOrder.formData);
