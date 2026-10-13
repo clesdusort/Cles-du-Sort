@@ -179,6 +179,17 @@
         <label>Ton email</label>
         <input type="email" id="emailInput" placeholder="toi@exemple.com" required>
       </div>
+      <div id="promoWrap" style="margin-bottom:6px;">
+        <a href="#" id="promoToggle" style="font-size:13.5px; color:#777; text-decoration:underline;">Tu as un code promo ?</a>
+        <div id="promoBox" style="display:none; margin-top:10px;">
+          <div style="display:flex; gap:10px;">
+            <input type="text" id="promoInput" placeholder="Ton code" autocomplete="off" autocapitalize="characters" spellcheck="false" style="flex:1; min-width:0; padding:12px 14px; border-radius:10px; border:1.5px solid var(--line); font-size:15px; font-family:var(--sans); text-transform:uppercase;">
+            <button type="button" class="btn btn-navy" id="promoApplyBtn" style="padding:12px 22px; font-size:14px;">Appliquer</button>
+          </div>
+        </div>
+        <div id="promoMsg" style="display:none; font-size:13.5px; margin-top:8px; color:#a3221f;"></div>
+      </div>
+      <div id="promoSummary" style="display:none; margin-top:8px;"></div>
       <div class="price" id="priceDisplay">0,00 €</div>
       <button class="btn btn-gold btn-block" id="payBtn">Procéder au paiement</button>
       <div class="error" id="errorMsg"></div>
@@ -274,6 +285,7 @@
 
   const BACKEND_URL = 'https://cles-du-sort-paiement.vercel.app/api/create-payment';
   const CAPTURE_URL = 'https://cles-du-sort-paiement.vercel.app/api/capture-payment';
+  const VALIDER_URL = 'https://cles-du-sort-paiement.vercel.app/api/valider-code';
   const GFORM_ACTION = 'https://docs.google.com/forms/u/0/d/e/1FAIpQLScVAVS1yj87m--vKkaA-FPnQLXbD-qADYDxHCh6r5WWO_ed4Q/formResponse';
 
   // Doit rester identique aux tarifs définis côté serveur (create-payment.js) —
@@ -298,6 +310,13 @@
   let paiementDejaTraite = false; // filet de sécurité côté site : évite un double appel de capture
   let selectedProducts = [];
   let pendingOrder = null;
+  let promo = null; // code promo appliqué : { code, pourcentage } — l'affichage est recalculé ici, le serveur reste la source de vérité
+  const promoToggle = document.getElementById('promoToggle');
+  const promoBox = document.getElementById('promoBox');
+  const promoInput = document.getElementById('promoInput');
+  const promoApplyBtn = document.getElementById('promoApplyBtn');
+  const promoMsg = document.getElementById('promoMsg');
+  const promoSummary = document.getElementById('promoSummary');
 
   function loadPendingOrder(){
     try {
@@ -312,8 +331,93 @@
 
   function updatePriceDisplay(){
     var total = selectedProducts.reduce(function(sum, id){ return sum + (PRODUCTS[id] ? PRODUCTS[id].amount : 0); }, 0);
-    priceDisplay.textContent = formatEuros(total);
+    var remise = promo ? Math.round(total * promo.pourcentage / 100) : 0;
+    priceDisplay.textContent = formatEuros(total - remise);
+    renderPromoSummary(total, remise);
   }
+
+  function renderPromoSummary(total, remise){
+    if (!promo || !total) {
+      promoSummary.style.display = 'none';
+      promoSummary.innerHTML = '';
+      return;
+    }
+    var html =
+      '<div style="display:flex; justify-content:space-between; gap:12px; font-size:14.5px; padding:10px 0; border-top:1px solid var(--line);">' +
+        '<span>Code ' + promo.code + ' (−' + promo.pourcentage + ' %) ' +
+          '<a href="#" id="promoRemove" style="font-size:12.5px; color:#777; text-decoration:underline; margin-left:6px;">Retirer</a></span>' +
+        '<strong>−' + formatEuros(remise) + '</strong>' +
+      '</div>';
+    if (selectedProducts.indexOf('mensuelle') !== -1) {
+      html += '<p style="font-size:12.5px; color:#666; margin:2px 0 0;">La remise ne concerne que ce premier paiement : la Guidance Mensuelle sera ensuite prélevée 36,00 € le 5 de chaque mois.</p>';
+    }
+    promoSummary.innerHTML = html;
+    promoSummary.style.display = 'block';
+  }
+
+  function showPromoMsg(text){
+    promoMsg.textContent = text;
+    promoMsg.style.display = text ? 'block' : 'none';
+  }
+
+  function retirerCode(){
+    promo = null;
+    try { sessionStorage.removeItem('cds_promo_code'); } catch(e){}
+    updatePriceDisplay();
+  }
+
+  // silencieux = true : application automatique (code venu d'un lien ou gardé en mémoire),
+  // on n'affiche une erreur que si le serveur a répondu que le code est refusé.
+  async function appliquerCode(code, silencieux){
+    code = String(code || '').trim().toUpperCase();
+    if (!code) return;
+    showPromoMsg('');
+    promoApplyBtn.disabled = true;
+    try {
+      const res = await fetch(VALIDER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: code, email: emailInput.value }),
+      });
+      const data = await res.json();
+      if (data.valide) {
+        promo = { code: data.code, pourcentage: data.pourcentage };
+        try { sessionStorage.setItem('cds_promo_code', promo.code); } catch(e){}
+        promoBox.style.display = 'none';
+        updatePriceDisplay();
+      } else {
+        retirerCode();
+        promoBox.style.display = 'block';
+        promoInput.value = code;
+        showPromoMsg(data.message || "Ce code n'est pas valide.");
+      }
+    } catch (err) {
+      if (!silencieux) { showPromoMsg('Impossible de vérifier le code pour le moment. Réessaie dans un instant.'); }
+    } finally {
+      promoApplyBtn.disabled = false;
+    }
+  }
+
+  promoToggle.addEventListener('click', function(e){
+    e.preventDefault();
+    promoBox.style.display = 'block';
+    promoInput.focus();
+  });
+  promoApplyBtn.addEventListener('click', function(){ appliquerCode(promoInput.value, false); });
+  promoInput.addEventListener('keydown', function(e){
+    if (e.key === 'Enter') { e.preventDefault(); appliquerCode(promoInput.value, false); }
+  });
+  promoSummary.addEventListener('click', function(e){
+    if (e.target && e.target.id === 'promoRemove') {
+      e.preventDefault();
+      promoInput.value = '';
+      retirerCode();
+    }
+  });
+  // Si l'email change alors qu'un code est appliqué, on revérifie (1 code promo par adresse email).
+  emailInput.addEventListener('change', function(){
+    if (promo) { appliquerCode(promo.code, true); }
+  });
 
   function renderRecap(){
     if (pendingOrder && Array.isArray(pendingOrder.products) && pendingOrder.products.length) {
@@ -358,6 +462,19 @@
   pendingOrder = loadPendingOrder();
   renderRecap();
 
+  // Code promo arrivé par un lien (?code=...) ou gardé en mémoire depuis la page d'inscription :
+  // on l'applique automatiquement, sans que la cliente ait à le ressaisir.
+  (function(){
+    var codeInitial = '';
+    try {
+      codeInitial = new URLSearchParams(window.location.search).get('code') || sessionStorage.getItem('cds_promo_code') || '';
+    } catch(e){}
+    if (codeInitial) {
+      promoInput.value = codeInitial.toUpperCase();
+      appliquerCode(codeInitial, true);
+    }
+  })();
+
   payBtn.addEventListener('click', async function(){
     errorMsg.style.display = 'none';
     if (!selectedProducts.length) {
@@ -376,7 +493,7 @@
       const res = await fetch(BACKEND_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ productIds: selectedProducts, email: emailInput.value }),
+        body: JSON.stringify({ productIds: selectedProducts, email: emailInput.value, code: promo ? promo.code : undefined }),
       });
       const data = await res.json();
       if (!res.ok) { throw new Error(data.error || 'Erreur inconnue'); }
@@ -551,6 +668,7 @@
             await submitToGoogleForms(pendingOrder.formData);
             sessionStorage.removeItem('cds_pending_order');
           }
+          try { sessionStorage.removeItem('cds_promo_code'); } catch(e){}
           showResult('success', 'Paiement confirmé ✨',
             "Merci ! Ta commande est enregistrée, je m'attelle à la préparation de ta lettre.",
             [ { label: "Retour à l'accueil", href: 'index.html', primary: true } ]);
