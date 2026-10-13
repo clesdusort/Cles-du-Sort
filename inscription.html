@@ -190,6 +190,7 @@
   <div class="wrap-narrow">
     <div class="kicker" style="justify-content:center;" id="formHeroKicker"><img src="assets/picto-simple.png" alt="">Prépare ta lettre</div>
     <p id="presetBanner" style="display:none; font-weight:700; color:var(--gold-deep); margin-bottom:6px;">✨ Sélection reprise depuis l'accueil — modifie-la si besoin ci-dessous.</p>
+    <p id="promoBanner" style="display:none; font-weight:700; color:var(--gold-deep); margin-bottom:6px;"></p>
     <p id="formHeroText">Remplis ce formulaire tranquillement, ça prend deux minutes, puis tu seras dirigé(e) directement vers le paiement. Rien n'est enregistré tant que le paiement n'est pas validé.</p>
   </div>
 </section>
@@ -547,6 +548,22 @@
   [document.getElementById('prestaMensuelle'), prestaPerso, document.getElementById('prestaAnniv')].forEach(function(chk){
     chk.addEventListener('change', updateGiftBlock);
   });
+
+  // Code promo arrivé par un lien (?code=BIENVENUE10, par exemple depuis Instagram) : on le garde
+  // en mémoire le temps de la commande, il sera vérifié et appliqué à l'étape du paiement.
+  // (sessionStorage = effacé à la fermeture de l'onglet ; rien n'est envoyé nulle part ici.)
+  (function(){
+    var code = new URLSearchParams(window.location.search).get('code');
+    if (!code) return;
+    code = code.trim().toUpperCase();
+    if (!/^[A-Z0-9_-]{1,30}$/.test(code)) return;
+    try { sessionStorage.setItem('cds_promo_code', code); } catch(e){}
+    var banner = document.getElementById('promoBanner');
+    if (banner) {
+      banner.textContent = '✨ Ton code ' + code + ' sera vérifié et appliqué à l\'étape du paiement.';
+      banner.style.display = 'block';
+    }
+  })();
 
   // Reprise de la sélection : soit une reprise simple depuis l'accueil (?produit=... dans l'URL),
   // soit une restauration complète des informations déjà saisies si on revient depuis la page
